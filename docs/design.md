@@ -131,6 +131,10 @@ Migrationツールは Alembic を使う。
 
 start_time / end_time はTIMESTAMP(日時)で持つ。日をまたぐ旅行にそのまま対応できる。値はupdate_scheduleが計算して埋める。
 
+以下2テーブルはPhase 3で作成する。Phase 1では作らない。
+
+理由: Phase 3の入力項目にある「割り勘方法」「端数処理」を入れる列が下の定義に無く、均等割り以外を表現できない。expense_participantsにも負担額・比率の列が要る。現状の定義のまま作るとPhase 3で必ずALTER TABLEすることになるため、要件が固まってから設計し直す。
+
 ### expenses
 
 | カラム | 型 | 説明 |
@@ -276,8 +280,8 @@ Phase 1では以下の割り切りとする。
 
 ## 開発手順
 
-1. プロジェクト初期化(Next.js / FastAPI / PostgreSQL / Git)
-2. DB設計・Migration
+1. プロジェクト初期化(Git / PostgreSQL / FastAPI)。Next.jsはバックエンドが動いてから着手する
+2. DB設計・Migration(users / trips / places / trip_places の4テーブル)
 3. 旅行CRUD
 4. 旅行プラン(場所追加・削除・順番変更・タイムライン表示)
 5. 移動時間(仮実装)・update_schedule
