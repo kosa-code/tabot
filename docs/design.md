@@ -63,12 +63,12 @@ AIが担当:
 |---|---|---|
 | Frontend | Next.js / React | |
 | Backend | Python / FastAPI | |
-| Database | PostgreSQL | 開発初期から本番までPostgres。移行作業を発生させない。アクセスはORM(SQLAlchemy)経由 |
+| Database | PostgreSQL | 開発初期から本番までPostgres。移行作業を発生させない。開発中はWindowsにインストールしたPostgresを直接使う(Dockerは使わない)。アクセスはORM(SQLAlchemy)経由 |
 | AI | OpenAI API | Phase 2から |
 | 移動時間計算 | 直線距離×係数(仮実装) | OSMnx / Routing APIは必要になってから |
 | Version Control | Git / GitHub | |
 | 開発 | CLI Coding Agent | |
-| コンテナ | Docker | 開発用PostgreSQLはdocker composeで起動。アプリ自体のコンテナ化はデプロイ前 |
+| コンテナ | Docker | 後回し。デプロイ前に導入 |
 | Deploy | AWS | Phase 3 |
 
 ---
