@@ -1,0 +1,58 @@
+# === 環境変数・秘密情報 ===
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# === Python / FastAPI ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# === Node / Next.js ===
+node_modules/
+.next/
+out/
+.turbo/
+next-env.d.ts
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# === Database ===
+# Postgresのデータはdocker volume管理。ローカルにbindした場合に備えて除外
+pgdata/
+postgres-data/
+*.sql.bak
+*.dump
+
+# === エディタ / IDE ===
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# === OS ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === その他 ===
+*.log
+logs/
+.claude/settings.local.json
