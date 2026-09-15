@@ -115,9 +115,12 @@ Migrationツールは Alembic を使う。
 | longitude | DOUBLE | 経度 |
 | category | VARCHAR | カテゴリ |
 | opening_hours | JSON | 営業時間 |
-| stay_minutes | INTEGER | 想定滞在時間 |
 
-場所データはPhase 1では手入力前提。
+placesは人間が育てるマスタではなく、選択された場所のスナップショット置き場とする。緯度経度・営業時間といった客観的事実だけを持ち、全ユーザーで共有する。
+
+Phase 1では外部APIが無いため手入力。Phase 2以降はsearch_placesの結果から自動で入る。外部APIを導入する際にsource / external_id列を追加し、重複登録の防止と更新に使う(今は追加しない)。
+
+移動時間の計算はプラン変更のたびに走るため、緯度経度は手元に保持する必要がある。また旅行プランは「そのとき何を選んだか」の記録なので、外部APIから場所が消えても記録が壊れないようにする。
 
 ### trip_places
 
@@ -126,8 +129,11 @@ Migrationツールは Alembic を使う。
 | trip_id | UUID | 旅行ID |
 | place_id | UUID | 場所ID |
 | visit_order | INTEGER | 訪問順 |
+| stay_minutes | INTEGER | 滞在時間 |
 | start_time | TIMESTAMP | 開始時刻 |
 | end_time | TIMESTAMP | 終了時刻 |
+
+stay_minutesはplacesではなくここに持つ。滞在時間は場所の客観的属性ではなく「その旅行で何分いるつもりか」という主観的な予定であり、旅行ごと・ユーザーごとに異なるため。
 
 start_time / end_time はTIMESTAMP(日時)で持つ。日をまたぐ旅行にそのまま対応できる。値はupdate_scheduleが計算して埋める。
 
