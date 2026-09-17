@@ -85,6 +85,17 @@ PostgreSQLの型をそのまま使う。以下の表記は下記に対応する�
 
 Migrationツールは Alembic を使う。
 
+NULL許可は以下のみ。それ以外はNOT NULLとする。
+
+| 列 | 理由 |
+|---|---|
+| trips.budget | 予算を決めずに作り始められる |
+| trip_places.start_time / end_time | update_scheduleが計算するまで空 |
+| places.opening_hours | 手入力なので不明な場合がある |
+| places.category | 同上 |
+
+trip_places.stay_minutesはNOT NULL(既定0)。空だと移動時間の計算ができないため。
+
 ### users
 
 | カラム | 型 | 説明 |
@@ -131,12 +142,23 @@ Phase 1では外部APIが無いため手入力。Phase 2以降はsearch_places�
 
 | カラム | 型 | 説明 |
 |---|---|---|
+| id | UUID | 旅程ID |
 | trip_id | UUID | 旅行ID |
 | place_id | UUID | 場所ID |
 | visit_order | INTEGER | 訪問順 |
 | stay_minutes | INTEGER | 滞在時間 |
 | start_time | TIMESTAMP | 開始時刻 |
 | end_time | TIMESTAMP | 終了時刻 |
+
+外部キー削除時の動作は以下とする。
+
+| 操作 | 動作 | 理由 |
+|---|---|---|
+| trips削除 | CASCADE | 旅行を消せば旅程も不要 |
+| places削除 | RESTRICT | 使用中の場所を消すと旅程が壊れる |
+| users削除 | RESTRICT | 旅行を持つユーザーを消すと旅行が孤児になる |
+
+主キーはidとする。trip_id + place_idの複合キーにすると、同じ旅行で同じ場所を2回訪問できない(出発と帰りに同じ駅を通る等)。
 
 stay_minutesはplacesではなくここに持つ。滞在時間は場所の客観的属性ではなく「その旅行で何分いるつもりか」という主観的な予定であり、旅行ごと・ユーザーごとに異なるため。
 
