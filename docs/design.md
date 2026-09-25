@@ -61,7 +61,7 @@ AIが担当:
 
 | 分類 | 技術 | 備考 |
 |---|---|---|
-| Frontend | Next.js / React | |
+| Frontend | React / Vite | Next.jsは採用しない。サーバー側描画・SEOが不要で、概念が増える分だけ不利なため |
 | Backend | Python / FastAPI | |
 | Database | PostgreSQL | 開発初期から本番までPostgres。移行作業を発生させない。開発中はWindowsにインストールしたPostgresを直接使う(Dockerは使わない)。アクセスはORM(SQLAlchemy)経由 |
 | AI | OpenAI API | Phase 2から |
@@ -313,7 +313,7 @@ Phase 1では以下の割り切りとする。
 
 ## 開発手順
 
-1. プロジェクト初期化(Git / PostgreSQL / FastAPI)。Next.jsはバックエンドが動いてから着手する
+1. プロジェクト初期化(Git / PostgreSQL / FastAPI)。フロント(React + Vite)はバックエンドが動いてから着手する
 2. DB設計・Migration(users / trips / places / trip_places の4テーブル)
 3. 旅行CRUD
 4. 旅行プラン(場所追加・削除・順番変更・タイムライン表示)
@@ -350,7 +350,7 @@ Agentに任せる: コード実装 / テストコード / リファクタリン�
 ### AWS構成案(Phase 3で再検討)
 
 ```
-Next.js → API Gateway → Lambda
+React (Vite) → API Gateway → Lambda
                           ├ PostgreSQL
                           ├ OpenAI API
                           └ CloudWatch
