@@ -1,0 +1,105 @@
+# tabot
+
+旅行の予定を作成・編集・管理するWebアプリ(個人開発)。
+
+行きたい場所を選んで並べると、移動時間と各地点の到着・出発時刻を自動で計算してタイムラインを作る。営業時間外の到着や終了時刻の超過は警告する。Phase 2からはOpenAI APIで「大須を追加して」のように自然言語でプランを編集できるようにする。
+
+AIは「何をしたいか」を理解し、時間・距離・金額の計算と検証は通常プログラムが行う。**AIの柔軟さと数値の正確さを両立した旅行プランナー**を目指す。
+
+## ドキュメント
+
+| ファイル | 内容 |
+|---|---|
+| [docs/design.md](docs/design.md) | 設計書。背景・提供価値・フェーズ・DB設計・機能仕様・開発手順 |
+| [docs/value-hypothesis.md](docs/value-hypothesis.md) | 価値仮説シート。対象者・課題・提供価値 |
+| [docs/value-proposition-canvas.md](docs/value-proposition-canvas.md) | Value Proposition Canvas |
+
+## 現在の状態
+
+Phase 1a(最小構成)の途中。バックエンドの土台とDBの4テーブル(users / trips / places / trip_places)まで作成済み。次は旅行CRUD。
+
+| Phase | 内容 |
+|---|---|
+| 1a | 旅行・場所のCRUD、訪問順、滞在時間、移動時間(仮)、タイムライン ← 今ここ |
+| 1b | 制約チェック(営業時間・時間制約) |
+| 2 | AIによる自然言語でのプラン編集 |
+| 3 | 割り勘・経費管理・共有・認証・AWSデプロイ |
+
+## 技術スタック
+
+| 分類 | 技術 |
+|---|---|
+| Frontend | React / Vite(バックエンドが動いてから着手) |
+| Backend | Python / FastAPI / SQLAlchemy / Alembic |
+| Database | PostgreSQL(ローカルにインストールして直接使う。Dockerは使わない) |
+| AI | OpenAI API(Phase 2から) |
+
+## ディレクトリ構成
+
+```
+tabot/
+├── backend/
+│   ├── app/
+│   │   ├── main.py      # FastAPIアプリ(/health)
+│   │   ├── config.py    # .env から DATABASE_URL を読む
+│   │   ├── db.py        # SQLAlchemy engine / session / Base
+│   │   └── models.py    # テーブル定義(正はここ)
+│   ├── alembic/         # マイグレーション
+│   ├── alembic.ini
+│   ├── requirements.txt
+│   └── .env.example
+└── docs/
+```
+
+## セットアップ(backend)
+
+前提: Python 3.10以上、PostgreSQL がローカルで起動していること。
+
+1. データベースを作る
+
+   ```bash
+   createdb tabot
+   ```
+
+2. 仮想環境を作って依存を入れる
+
+   ```bash
+   cd backend
+   python -m venv .venv
+   source .venv/bin/activate   # Windows は .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. 接続先を設定する。`.env` はコミットされない
+
+   ```bash
+   cp .env.example .env
+   # .env の DATABASE_URL のパスワード等を自分の環境に合わせて書き換える
+   ```
+
+4. マイグレーションを適用する
+
+   ```bash
+   alembic upgrade head
+   ```
+
+5. 開発サーバーを起動する
+
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+
+   `http://127.0.0.1:8000/health` が `{"status":"ok"}` を返せば動いている。APIドキュメントは `http://127.0.0.1:8000/docs`。
+
+### モデルを変えたとき
+
+`backend/` で以下を実行してマイグレーションを作り、内容を確認してから適用する。
+
+```bash
+alembic revision --autogenerate -m "変更内容"
+alembic upgrade head
+```
+
+## 開発の進め方
+
+人間が目的・要件・DB設計・責務分担・Tool仕様・計算ルールを決め、CLI Coding Agentがコード実装・テスト・リファクタリングを担当する。機能単位で進め、一度にすべてを実装させない。詳細は [docs/design.md](docs/design.md) の「開発方針」「開発手順」を参照。
