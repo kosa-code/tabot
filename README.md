@@ -10,17 +10,23 @@ AIは「何をしたいか」を理解し、時間・距離・金額の計算と
 
 | ファイル | 内容 |
 |---|---|
-| [docs/design.md](docs/design.md) | 設計書。背景・提供価値・フェーズ・DB設計・機能仕様・開発手順 |
+| [docs/design.md](docs/design.md) | 要件定義。概要・背景と課題・対象ユーザー・提供価値 |
 | [docs/value-hypothesis.md](docs/value-hypothesis.md) | 価値仮説シート。対象者・課題・提供価値 |
 | [docs/value-proposition-canvas.md](docs/value-proposition-canvas.md) | Value Proposition Canvas |
-| [docs/ui.md](docs/ui.md) | UI のルール。色・文字サイズ・余白・アイコン |
+| [docs/ui.md](docs/ui.md) | UI のルール。色・文字サイズ・余白・アイコン・部品の一覧 |
+
+DB設計や開発手順などの技術的な設計は、要件定義に絞った際に分離した。必要になったら別ファイルに起こす(過去の版は git 履歴の `docs/design.md` v2.0 にある)。
 
 ## 現在の状態
 
 Phase 1a(最小構成)の途中。
 
 - backend: 土台とDBの4テーブル(users / trips / places / trip_places)まで作成済み。APIは `/health` のみ
-- frontend: サンプルデータをメモリ上で編集するモック。サイドバー付きのダッシュボード構成で、予算(支出との比較)・行程・注意のカードと、タイムライン(移動時間の仮計算と営業時間の警告つき)を表示する。旅行の編集、場所の追加・削除・並び替え、滞在時間と予算の変更ができる。バックエンドとは未接続
+- frontend: サンプルデータをメモリ上で編集するモック。バックエンドとは未接続
+  - サイドバー + 上部バーのダッシュボード構成
+  - 予算(支出との比較と進捗バー)・行程(移動と滞在の内訳)・注意(警告の一覧)のカード
+  - 縦のレールに沿ったタイムライン。移動時間の仮計算、営業時間と終了時刻の警告
+  - 旅行の編集と場所の追加は右から出るサイドビューで行う。並び替え・削除・滞在時間・予算はその場で変更できる
 
 | Phase | 内容 |
 |---|---|
@@ -29,11 +35,13 @@ Phase 1a(最小構成)の途中。
 | 2 | AIによる自然言語でのプラン編集 |
 | 3 | 割り勘・経費管理・共有・認証・AWSデプロイ |
 
+次にやること: backend に旅行CRUDのAPIを作り、frontend のサンプルデータ読み込みをAPI呼び出しに置き換える。
+
 ## 技術スタック
 
 | 分類 | 技術 |
 |---|---|
-| Frontend | React / Vite / Tailwind CSS v4 / lucide-react |
+| Frontend | React / TypeScript / Vite / Tailwind CSS v4 / lucide-react |
 | Backend | Python / FastAPI / SQLAlchemy / Alembic |
 | Database | PostgreSQL(ローカルにインストールして直接使う。Dockerは使わない) |
 | AI | OpenAI API(Phase 2から) |
@@ -42,28 +50,33 @@ Phase 1a(最小構成)の途中。
 
 ```
 tabot/
+├── .github/                 # PR / Issue テンプレート、マージ時コメントの workflow
 ├── backend/
 │   ├── app/
-│   │   ├── main.py      # FastAPIアプリ(/health)
-│   │   ├── config.py    # .env から DATABASE_URL を読む
-│   │   ├── db.py        # SQLAlchemy engine / session / Base
-│   │   └── models.py    # テーブル定義(正はここ)
-│   ├── alembic/         # マイグレーション
+│   │   ├── main.py          # FastAPIアプリ(/health)
+│   │   ├── config.py        # .env から DATABASE_URL を読む
+│   │   ├── db.py            # SQLAlchemy engine / session / Base
+│   │   └── models.py        # テーブル定義(正はここ)
+│   ├── alembic/             # マイグレーション
 │   ├── data/
-│   │   └── sample.json  # 4テーブルと同じ構造のサンプルデータ(イタリア周遊)
+│   │   └── sample.json      # 4テーブルと同じ構造のサンプルデータ(イタリア周遊)
 │   ├── alembic.ini
 │   ├── requirements.txt
 │   └── .env.example
 ├── frontend/
-│   └── src/
-│       ├── App.tsx            # 画面全体。サンプルデータをstateとして持つ
-│       ├── index.css          # Tailwind の読み込みとデザイントークン(@theme)
-│       ├── components/ui/     # Button / IconButton / Badge / Card / SideView / Field / Stat など
-│       ├── components/layout/ # AppShell / Sidebar / TopBar / PageHeader
-│       ├── components/trip/   # BudgetCard / ItineraryCard / WarningsCard / Timeline / 各フォーム
-│       ├── lib/schedule.ts    # タイムライン計算(update_scheduleの仮置き)
-│       ├── lib/format.ts      # 日時・金額の表示
-│       └── data/sample.ts     # backend/data/sample.json を読み込む
+│   ├── src/
+│   │   ├── App.tsx              # 画面。部品を組み合わせ、サンプルデータを state として持つ
+│   │   ├── index.css            # Tailwind の読み込みとデザイントークン(@theme)
+│   │   ├── components/ui/       # Button / IconButton / Badge / Card / SideView / Field / SegmentedControl / Stat / SegmentBar
+│   │   ├── components/layout/   # AppShell / Sidebar / TopBar / PageHeader
+│   │   ├── components/trip/     # BudgetCard / ItineraryCard / WarningsCard / Timeline / TripEditForm / AddPlaceForm
+│   │   ├── lib/schedule.ts      # タイムライン計算(update_schedule の仮置き)
+│   │   ├── lib/format.ts        # 日時・金額の表示
+│   │   ├── lib/categories.ts    # 場所のカテゴリ(表示名・色・アイコン)
+│   │   ├── lib/ui.ts            # アイコンサイズの定数
+│   │   ├── types/               # 4テーブルに対応する型
+│   │   └── data/sample.ts       # backend/data/sample.json を読み込む
+│   └── vite.config.ts           # @ と @data のエイリアス
 └── docs/
 ```
 
@@ -113,24 +126,6 @@ tabot/
 
    `http://127.0.0.1:8000/health` が `{"status":"ok"}` を返せば動いている。APIドキュメントは `http://127.0.0.1:8000/docs`。
 
-## セットアップ(frontend)
-
-前提: Node.js 20以上。
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-`http://localhost:5173/` でモックが開く。データは `backend/data/sample.json` を直接読み込んでおり、画面上の編集はリロードで元に戻る。
-
-### デザイン
-
-色・文字サイズ・余白・アイコンのルールは [docs/ui.md](docs/ui.md) にまとめている。値の正は `frontend/src/index.css` の `@theme` と `frontend/src/lib/ui.ts`。
-
-タイムラインの計算(移動時間・到着時刻・営業時間チェック)は、バックエンドの update_schedule ができるまでの仮置きとして `frontend/src/lib/schedule.ts` に置いている。接続時にはAPIの結果に置き換える。
-
 ### モデルを変えたとき
 
 `backend/` で以下を実行してマイグレーションを作り、内容を確認してから適用する。
@@ -140,6 +135,28 @@ alembic revision --autogenerate -m "変更内容"
 alembic upgrade head
 ```
 
+## セットアップ(frontend)
+
+前提: Node.js 20以上。
+
+```bash
+cd frontend
+npm install
+npm run dev      # http://localhost:5173/
+npm run build    # 型チェックとビルド
+npm run lint     # oxlint
+```
+
+データは `backend/data/sample.json` を直接読み込んでおり、画面上の編集はリロードで元に戻る。
+
+タイムラインの計算(移動時間・到着時刻・営業時間チェック)は、バックエンドの update_schedule ができるまでの仮置きとして `frontend/src/lib/schedule.ts` に置いている。接続時にはAPIの結果に置き換える。
+
+### デザイン
+
+色・文字サイズ・余白・アイコン・部品のルールは [docs/ui.md](docs/ui.md) にまとめている。値の正は `frontend/src/index.css` の `@theme` と `frontend/src/lib/ui.ts`。画面を作るときは `components/ui` と `components/layout` の部品を組み合わせ、画面側で見た目のクラスを書かない。
+
 ## 開発の進め方
 
-人間が目的・要件・DB設計・責務分担・Tool仕様・計算ルールを決め、CLI Coding Agentがコード実装・テスト・リファクタリングを担当する。機能単位で進め、一度にすべてを実装させない。詳細は [docs/design.md](docs/design.md) の「開発方針」「開発手順」を参照。
+人間が目的・要件・DB設計・責務分担・Tool仕様・計算ルールを決め、CLI Coding Agentがコード実装・テスト・リファクタリングを担当する。機能単位で進め、一度にすべてを実装させない。
+
+AIと通常プログラムの責務は分ける。AIは自然言語の理解・候補の選択・提案・説明を担当し、DB操作・金額や時間や距離の計算・制約チェック・入力検証は通常プログラムが担当する。重要な値をAIに推測させない。
