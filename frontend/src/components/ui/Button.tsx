@@ -16,15 +16,15 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 // 影は付けない。primary は画面に1つだけ
 const VARIANT: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-fg-inverse hover:bg-primary/90 disabled:bg-neutral-300',
-  secondary: 'border border-neutral-300 text-fg-strong hover:bg-paper-deep',
+  secondary: 'border border-fg-strong text-fg-strong hover:bg-paper-deep',
   ghost: 'text-fg-muted hover:text-fg-strong',
   danger: 'text-red-600 hover:bg-red-50',
 }
 
-// sm: 28px / md: 44px
+// ピル型。sm: 32px / md: 48px。横の padding を広めに取り、文字を中央に置く
 const SIZE: Record<Size, string> = {
-  sm: 'h-7 gap-1 px-3 text-small',
-  md: 'h-11 gap-2 px-6 text-body',
+  sm: 'h-8 gap-1 px-5 text-small',
+  md: 'h-12 gap-2 px-8 text-body',
 }
 
 export function Button({ variant = 'secondary', size = 'md', icon: IconComponent, className, type = 'button', children, ...rest }: Props) {
@@ -32,7 +32,7 @@ export function Button({ variant = 'secondary', size = 'md', icon: IconComponent
     <button
       type={type}
       className={cn(
-        'inline-flex items-center justify-center rounded-lg whitespace-nowrap transition-colors',
+        'inline-flex items-center justify-center rounded-full whitespace-nowrap transition-colors',
         FOCUS_RING,
         'disabled:cursor-not-allowed disabled:opacity-60',
         VARIANT[variant],

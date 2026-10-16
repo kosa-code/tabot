@@ -102,11 +102,11 @@
 
 | 用途 | クラス |
 |---|---|
-| ボタン、アイコンボタン、行のホバー地、InlineEdit | `rounded-lg` |
-| Badge、レールの丸 | `rounded-full` |
+| ボタン、アイコンボタン、Badge、レールの丸 | `rounded-full`(ピル型) |
+| 行のホバー地、InlineEdit、ナビのフォーカス | `rounded-lg` |
 | 入力欄 | `rounded-none`(下線型) |
 
-`rounded-lg` が最大。`xl` / `2xl` は使わない。影は SideView の `shadow-xl` だけ。
+ピル以外は `rounded-lg` が最大。`xl` / `2xl` は使わない。影は SideView の `shadow-xl` だけ。
 
 ## フォーカス
 
@@ -127,7 +127,7 @@
 
 | 部品 | 役割 | サイズ・種類(既定) |
 |---|---|---|
-| `Button` | 文字のボタン。`icon` で左にアイコン | size `sm`(28px) / `md`(44px、既定)。variant `primary` / `secondary`(既定) / `ghost` / `danger`。影なし |
+| `Button` | ピル型の文字のボタン。横の padding を広く取り、主ボタンにアイコンは添えない | size `sm`(32px) / `md`(48px、既定)。variant `primary`(塗り) / `secondary`(黒い枠線、既定) / `ghost`(文字だけ) / `danger`。影なし |
 | `IconButton` | アイコンだけのボタン。`label` 必須 | size `sm`(28px、既定) / `md`(44px)。variant `ghost`(既定) / `danger` |
 | `Badge` | 淡い地のピル | size `sm`(既定) / `md`。tone `neutral`(既定) / `primary` / `secondary` |
 | `Field` / `Input` / `Select` / `FieldRow` | ラベル・補足・エラー付きの入力欄。下線型。`Field` が id と aria を結ぶ | Input / Select の size `sm`(28px, body) / `md`(44px, title、既定) |

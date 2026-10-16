@@ -27,7 +27,7 @@ export function IconButton({ icon: IconComponent, label, size = 'sm', variant = 
       type={type}
       aria-label={label}
       title={label}
-      className={cn('flex items-center justify-center rounded-lg transition-colors disabled:opacity-30', FOCUS_RING, SIZE[size], VARIANT[variant], className)}
+      className={cn('flex items-center justify-center rounded-full transition-colors disabled:opacity-30', FOCUS_RING, SIZE[size], VARIANT[variant], className)}
       {...rest}
     >
       <IconComponent size={iconSize(size)} />

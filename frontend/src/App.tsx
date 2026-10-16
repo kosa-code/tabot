@@ -1,4 +1,3 @@
-import { Pencil, Plus } from 'lucide-react'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 
 import { AppShell } from '@/components/layout/AppShell'
@@ -47,10 +46,10 @@ export default function App() {
         meta={`${formatDateTimeLong(start)} – ${formatDateTimeLong(end, false)} · ${DISPLAY_TIME_ZONE_LABEL}`}
         actions={
           <>
-            <Button variant="primary" icon={Plus} onClick={() => setPanel('addPlace')}>
+            <Button variant="primary" onClick={() => setPanel('addPlace')}>
               場所を追加
             </Button>
-            <Button variant="ghost" icon={Pencil} onClick={() => setPanel('editTrip')}>
+            <Button variant="ghost" onClick={() => setPanel('editTrip')}>
               旅行を編集
             </Button>
           </>
