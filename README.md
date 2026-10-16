@@ -136,6 +136,8 @@ npm run dev
 | `secondary` | `#219ebc` | カード見出しのアイコン、選択中のナビ、フォーカス、行程バー(移動) |
 | `secondary-light` | `#8ecae6` | 選択中・ホバーの淡い地、行程バー(滞在) |
 
+フォントは英数字を [Inter](https://rsms.me/inter/)(`@fontsource-variable/inter` で自己ホスト)、日本語を Hiragino Sans / Noto Sans JP にフォールバックさせる。数字は `tabular-nums` で桁を揃える。
+
 アイコンは [lucide-react](https://lucide.dev/) を使う。自前のSVGは持たない。
 
 タイムラインの計算(移動時間・到着時刻・営業時間チェック)は、バックエンドの update_schedule ができるまでの仮置きとして `frontend/src/lib/schedule.ts` に置いている。接続時にはAPIの結果に置き換える。

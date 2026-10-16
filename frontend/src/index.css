@@ -1,3 +1,4 @@
+@import "@fontsource-variable/inter";
 @import "tailwindcss";
 
 /*
@@ -14,11 +15,13 @@
 
   --color-ink: var(--color-secondary-dark);
   --color-paper: #f4f6f8;
-  --font-sans: "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
 }
 
 @layer base {
   html {
     @apply bg-paper font-sans text-[14px] text-ink;
+    /* Inter の字形: 一階建ての a(cv11)と丸い t(ss03)。英数字を柔らかく見せる */
+    font-feature-settings: "cv11", "ss03";
   }
 }
