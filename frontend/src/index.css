@@ -28,7 +28,8 @@
   --color-fg-subtle: #999999;
   --color-fg-inverse: #ffffff;
 
-  --color-paper: #ffffff;
+  --color-paper: #f5f3ee;
+  --color-paper-deep: #ebe8e0;
 
   --text-display: 40px;
   --text-display--line-height: 48px;

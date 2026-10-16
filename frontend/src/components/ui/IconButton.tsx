@@ -16,7 +16,7 @@ type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
 
 const SIZE: Record<Size, string> = { sm: 'size-7', md: 'size-11' }
 const VARIANT: Record<IconButtonVariant, string> = {
-  ghost: 'text-fg-subtle hover:bg-neutral-100 hover:text-fg-strong',
+  ghost: 'text-fg-subtle hover:bg-paper-deep hover:text-fg-strong',
   danger: 'text-fg-subtle hover:bg-red-50 hover:text-red-600',
 }
 

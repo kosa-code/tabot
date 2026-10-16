@@ -16,7 +16,7 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 // 影は付けない。primary は画面に1つだけ
 const VARIANT: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-fg-inverse hover:bg-primary/90 disabled:bg-neutral-300',
-  secondary: 'border border-neutral-300 text-fg-strong hover:bg-neutral-50',
+  secondary: 'border border-neutral-300 text-fg-strong hover:bg-paper-deep',
   ghost: 'text-fg-muted hover:text-fg-strong',
   danger: 'text-red-600 hover:bg-red-50',
 }

@@ -75,7 +75,7 @@ export function Timeline({ items, onMove, onRemove, onStayChange, onAdd }: Props
                 </div>
               </li>
             )}
-            <li id={timelineRowId(item.tripPlace.id)} className="group relative -mx-3 flex items-start gap-4 rounded-lg px-3 py-4 transition-colors hover:bg-neutral-50">
+            <li id={timelineRowId(item.tripPlace.id)} className="group relative -mx-3 flex items-start gap-4 rounded-lg px-3 py-4 transition-colors hover:bg-paper-deep">
               {/* 行は -mx-3 で左に 12px はみ出しているので、レール(-28px)までは -16px */}
               <span aria-hidden className={cn('absolute top-6 -left-4 size-3 -translate-x-1/2 rounded-full border-2 bg-white', hasWarning ? 'border-primary' : 'border-neutral-300')} />
               <div className={cn(TIME_COL, 'shrink-0 pt-1 text-right tabular-nums')}>
