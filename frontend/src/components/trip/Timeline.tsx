@@ -26,6 +26,9 @@ function CategoryBadge({ value }: { value: string | null }) {
   )
 }
 
+// レール上の丸。content の左 28px(= ol の左端)を中心に置く
+const NODE = 'absolute -left-7 -translate-x-1/2 rounded-full'
+
 export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
   if (items.length === 0) {
     return <p className="py-12 text-center text-small text-fg-muted">まだ場所がありません。「場所を追加」から登録してください。</p>
@@ -34,8 +37,10 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
   const last = items[items.length - 1]
 
   return (
-    // 左のレール(縦線)に沿って、日付は大きな丸、各地点は小さな丸で並べる
-    <ol className="relative ml-4 border-l-2 border-neutral-200 pl-7 py-1">
+    // 左のレール(縦線)に沿って、日付は大きな丸、各地点は小さな丸で並べる。
+    // レールと丸はどちらも ol の左端(x = 0)を中心にする
+    <ol className="relative ml-3 py-1 pl-7">
+      <span aria-hidden className="absolute inset-y-0 left-0 w-0.5 -translate-x-1/2 bg-neutral-200" />
       {items.map((item, index) => {
         const prev = items[index - 1]
         const newDay = !prev || dateKey(prev.arrive) !== dateKey(item.arrive)
@@ -49,23 +54,15 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
               </li>
             )}
             {newDay && (
-              <li className={cn('relative', index > 0 ? 'pt-5 pb-2' : 'pb-2')}>
-                <span
-                  aria-hidden
-                  className="absolute top-1/2 -left-7 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-neutral-400 bg-white"
-                  style={{ marginTop: index > 0 ? 6 : -1 }}
-                />
-                <span className="text-title font-semibold text-fg-strong">{formatDate(item.arrive)}</span>
+              <li className={index > 0 ? 'pt-5 pb-2' : 'pb-2'}>
+                <div className="relative flex items-center">
+                  <span aria-hidden className={cn(NODE, 'top-1/2 size-5 -translate-y-1/2 border-2 border-neutral-400 bg-white')} />
+                  <span className="text-title font-semibold text-fg-strong">{formatDate(item.arrive)}</span>
+                </div>
               </li>
             )}
-            <li className="group relative -ml-2 flex gap-3 rounded-2xl py-2 pr-1 pl-2 transition-colors hover:bg-neutral-50">
-              <span
-                aria-hidden
-                className={cn(
-                  'absolute top-[17px] -left-5 size-3 -translate-x-1/2 rounded-full border-2 bg-white',
-                  hasWarning ? 'border-primary' : 'border-neutral-300',
-                )}
-              />
+            <li className="group relative flex gap-3 rounded-2xl py-2 pr-1 transition-colors hover:bg-neutral-50">
+              <span aria-hidden className={cn(NODE, 'top-3 size-3 border-2 bg-white', hasWarning ? 'border-primary' : 'border-neutral-300')} />
               <div className="w-12 shrink-0 pt-1 text-right tabular-nums">
                 <div className="text-body font-semibold text-fg-strong">{formatTime(item.arrive)}</div>
                 {item.tripPlace.stay_minutes > 0 && <div className="text-caption text-fg-subtle">{formatTime(item.depart)}</div>}
@@ -110,17 +107,15 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
           </Fragment>
         )
       })}
-      <li className="relative pt-5">
-        <span
-          aria-hidden
-          className="absolute -left-7 flex size-5 -translate-x-1/2 items-center justify-center rounded-full bg-secondary text-fg-inverse"
-          style={{ marginTop: 1 }}
-        >
-          <Check size={ICON.xs} strokeWidth={3} />
-        </span>
-        <span className="text-small text-fg-muted">
-          最終地点を出発 <span className="font-semibold text-fg-strong tabular-nums">{formatTime(last.depart)}</span>
-        </span>
+      <li className="pt-5">
+        <div className="relative flex items-center">
+          <span aria-hidden className={cn(NODE, 'top-1/2 flex size-5 -translate-y-1/2 items-center justify-center bg-secondary text-fg-inverse')}>
+            <Check size={ICON.xs} strokeWidth={3} />
+          </span>
+          <span className="text-small text-fg-muted">
+            最終地点を出発 <span className="font-semibold text-fg-strong tabular-nums">{formatTime(last.depart)}</span>
+          </span>
+        </div>
       </li>
     </ol>
   )

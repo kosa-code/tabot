@@ -1,4 +1,4 @@
-import { Calendar, ChevronDown, ChevronRight, House, Map, PanelLeft, Route, Settings, User, Wallet, type LucideIcon } from 'lucide-react'
+import { Calendar, ChevronRight, House, Map, Route, Settings, User, Wallet, type LucideIcon } from 'lucide-react'
 
 import { cn } from '@/lib/cn'
 import { ICON } from '@/lib/ui'
@@ -45,13 +45,9 @@ function NavItem({ icon: IconComponent, label, active }: NavItemData) {
 export function Sidebar() {
   return (
     <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-neutral-200/70 bg-white lg:flex">
-      <div className="flex h-14 items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <span className="flex size-7 items-center justify-center rounded-lg bg-secondary-dark text-small font-bold text-fg-inverse">t</span>
-          <span className="text-title font-semibold text-fg-strong">tabot</span>
-          <ChevronDown size={ICON.sm} className="text-fg-subtle" />
-        </div>
-        <PanelLeft size={ICON.md} className="text-fg-subtle" />
+      <div className="flex h-14 items-center gap-2 px-4">
+        <span className="flex size-7 items-center justify-center rounded-lg bg-secondary-dark text-small font-bold text-fg-inverse">t</span>
+        <span className="text-title font-semibold text-fg-strong">tabot</span>
       </div>
 
       <nav className="flex-1 space-y-5 px-3 py-2">
