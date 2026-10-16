@@ -19,7 +19,7 @@ AIは「何をしたいか」を理解し、時間・距離・金額の計算と
 Phase 1a(最小構成)の途中。
 
 - backend: 土台とDBの4テーブル(users / trips / places / trip_places)まで作成済み。APIは `/health` のみ
-- frontend: サンプルデータをメモリ上で編集するモック。旅行の編集、場所の追加・削除・並び替え、滞在時間の変更、タイムライン表示(移動時間の仮計算と営業時間の警告つき)が動く。バックエンドとは未接続
+- frontend: サンプルデータをメモリ上で編集するモック。サイドバー付きのダッシュボード構成で、予算(支出との比較)・行程・注意のカードと、タイムライン(移動時間の仮計算と営業時間の警告つき)を表示する。旅行の編集、場所の追加・削除・並び替え、滞在時間と予算の変更ができる。バックエンドとは未接続
 
 | Phase | 内容 |
 |---|---|
@@ -56,8 +56,9 @@ tabot/
 ├── frontend/
 │   └── src/
 │       ├── App.tsx            # 画面全体。サンプルデータをstateとして持つ
-│       ├── components/ui/     # Button / Field / Card / Badge
-│       ├── components/trip/   # TripCard / AddPlaceForm / Timeline / TripSummary
+│       ├── components/ui/     # Button / Field / Badge / Icon / ShellCard / Dialog
+│       ├── components/layout/ # Sidebar / TopBar
+│       ├── components/trip/   # BudgetCard / ItineraryCard / WarningsCard / Timeline / 各フォーム
 │       ├── lib/schedule.ts    # タイムライン計算(update_scheduleの仮置き)
 │       ├── lib/format.ts      # 日時・金額の表示
 │       └── data/sample.ts     # backend/data/sample.json を読み込む
@@ -67,6 +68,8 @@ tabot/
 ## サンプルデータ
 
 `backend/data/sample.json` に、DBの4テーブルと同じ構造でヴェネツィア・フィレンツェ・ローマを回る旅程のサンプルを置いている。DBを立てずにCRUDやタイムラインのロジックを作るときの入力に使う。`start_time` / `end_time` は update_schedule が計算して埋める想定なので null にしている。
+
+`expenses` は Phase 3 の案(支払った人 / 金額 / 内容)に沿ったモック用のデータで、予算カードの表示にだけ使う。DBにはまだ無い。
 
 ## セットアップ(backend)
 

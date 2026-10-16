@@ -38,9 +38,19 @@ export type TripPlace = {
   end_time: string | null
 }
 
+// Phase 3 の案。DBにはまだ無く、モック表示のためにサンプルJSONだけが持つ
+export type Expense = {
+  id: string
+  trip_id: string
+  payer_id: string
+  amount: number
+  description: string
+}
+
 export type SampleData = {
   users: User[]
   trips: Trip[]
   places: Place[]
   trip_places: TripPlace[]
+  expenses: Expense[]
 }
