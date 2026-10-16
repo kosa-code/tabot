@@ -57,9 +57,9 @@ tabot/
 ├── frontend/
 │   └── src/
 │       ├── App.tsx            # 画面全体。サンプルデータをstateとして持つ
-│       ├── components/ui/     # Button / Field / Badge / ShellCard / Dialog
-│       ├── index.css          # Tailwind の読み込みとカラーパレット(@theme)
-│       ├── components/layout/ # Sidebar / TopBar
+│       ├── index.css          # Tailwind の読み込みとデザイントークン(@theme)
+│       ├── components/ui/     # Button / IconButton / Badge / Card / SideView / Field / Stat など
+│       ├── components/layout/ # AppShell / Sidebar / TopBar / PageHeader
 │       ├── components/trip/   # BudgetCard / ItineraryCard / WarningsCard / Timeline / 各フォーム
 │       ├── lib/schedule.ts    # タイムライン計算(update_scheduleの仮置き)
 │       ├── lib/format.ts      # 日時・金額の表示

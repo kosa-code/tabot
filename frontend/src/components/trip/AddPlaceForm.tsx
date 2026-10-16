@@ -2,8 +2,8 @@ import { useState, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui/Button'
 import { Field, Input, Select } from '@/components/ui/Field'
+import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { CATEGORIES } from '@/lib/categories'
-import { cn } from '@/lib/cn'
 import type { Place } from '@/types'
 
 export type NewPlaceInput = {
@@ -45,26 +45,14 @@ export function AddPlaceForm({ existingPlaces, onAdd, onCancel }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <div className="flex rounded-xl bg-neutral-100 p-0.5 text-small">
-        {(
-          [
-            ['existing', '登録済みから選ぶ'],
-            ['new', '新しく入力する'],
-          ] as const
-        ).map(([value, label]) => (
-          <button
-            key={value}
-            type="button"
-            onClick={() => setMode(value)}
-            className={cn(
-              'flex-1 rounded-[10px] px-3 py-2',
-              mode === value ? 'bg-white font-medium shadow-sm' : 'text-fg-muted hover:text-fg-strong',
-            )}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <SegmentedControl
+        value={mode}
+        onChange={setMode}
+        options={[
+          { value: 'existing', label: '登録済みから選ぶ' },
+          { value: 'new', label: '新しく入力する' },
+        ]}
+      />
 
       {mode === 'existing' ? (
         <Field label="場所" hint="Phase 2 では検索で候補を出す。今は登録済みの場所から選ぶ">

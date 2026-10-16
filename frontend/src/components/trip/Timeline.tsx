@@ -1,7 +1,8 @@
-import { ArrowDown, ArrowUp, Check, Clock, TriangleAlert, X, type LucideIcon } from 'lucide-react'
+import { ArrowDown, ArrowUp, Check, Clock, TriangleAlert, X } from 'lucide-react'
 import { Fragment } from 'react'
 
 import { Badge } from '@/components/ui/Badge'
+import { IconButton } from '@/components/ui/IconButton'
 import { findCategory } from '@/lib/categories'
 import { cn } from '@/lib/cn'
 import { ICON } from '@/lib/ui'
@@ -22,24 +23,6 @@ function CategoryBadge({ value }: { value: string | null }) {
     <Badge tone={c.tone} icon={c.icon} size="md">
       {c.label}
     </Badge>
-  )
-}
-
-function IconButton({ icon: IconComponent, label, disabled, danger, onClick }: { icon: LucideIcon; label: string; disabled?: boolean; danger?: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      disabled={disabled}
-      onClick={onClick}
-      className={cn(
-        'flex size-7 items-center justify-center rounded-lg transition-colors disabled:opacity-30',
-        danger ? 'text-fg-subtle hover:bg-red-50 hover:text-red-600' : 'text-fg-subtle hover:bg-secondary-light/25 hover:text-secondary-dark',
-      )}
-    >
-      <IconComponent size={ICON.md} />
-    </button>
   )
 }
 
@@ -121,7 +104,7 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
               <div className="flex shrink-0 items-start gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
                 <IconButton icon={ArrowUp} label="上へ" disabled={index === 0} onClick={() => onMove(item.tripPlace.id, -1)} />
                 <IconButton icon={ArrowDown} label="下へ" disabled={index === items.length - 1} onClick={() => onMove(item.tripPlace.id, 1)} />
-                <IconButton icon={X} label="削除" danger onClick={() => onRemove(item.tripPlace.id)} />
+                <IconButton icon={X} label="削除" variant="danger" onClick={() => onRemove(item.tripPlace.id)} />
               </div>
             </li>
           </Fragment>

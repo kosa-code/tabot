@@ -1,22 +1,21 @@
+import { Check, Info, Pencil, X } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 
-import { Check, Info, Pencil, X } from 'lucide-react'
-
 import { Button } from '@/components/ui/Button'
+import { Card, CardBody, CardHeader } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Field'
-import { ShellCard } from '@/components/ui/ShellCard'
+import { IconButton } from '@/components/ui/IconButton'
+import { HATCHED, SegmentBar } from '@/components/ui/SegmentBar'
+import { Stat } from '@/components/ui/Stat'
 import { formatYen } from '@/lib/format'
-import type { Expense } from '@/types'
 import { ICON } from '@/lib/ui'
+import type { Expense } from '@/types'
 
 type Props = {
   budget: number | null
   expenses: Expense[]
   onBudgetChange: (budget: number | null) => void
 }
-
-const HATCH =
-  'bg-[repeating-linear-gradient(115deg,transparent_0_10px,rgba(255,255,255,0.35)_10px_12px)]'
 
 export function BudgetCard({ budget, expenses, onBudgetChange }: Props) {
   const [editing, setEditing] = useState(false)
@@ -32,17 +31,19 @@ export function BudgetCard({ budget, expenses, onBudgetChange }: Props) {
   }
 
   return (
-    <ShellCard
-      title="予算"
-      action={
-        <span className="text-fg-subtle" title="支出の合計と予算の比較。支出は Phase 3 で登録できるようになる(今はサンプル)">
-          <Info size={ICON.lg} />
-        </span>
-      }
-    >
-      <div className="flex h-full flex-col">
-        <div className="text-display font-semibold text-fg-strong tabular-nums">{formatYen(spent)}</div>
-        <div className="mt-2 text-small text-fg-muted">
+    <Card>
+      <CardHeader
+        title="予算"
+        subtitle="支出の合計と予算の比較"
+        action={
+          <span className="text-fg-subtle" title="支出は Phase 3 で登録できるようになる(今はサンプル)">
+            <Info size={ICON.lg} />
+          </span>
+        }
+      />
+      <CardBody>
+        <Stat value={formatYen(spent)} />
+        <p className="mt-2 text-small text-fg-muted">
           {remaining == null ? (
             '予算が未設定です'
           ) : remaining >= 0 ? (
@@ -54,39 +55,31 @@ export function BudgetCard({ budget, expenses, onBudgetChange }: Props) {
               <span className="font-medium text-red-600">{formatYen(-remaining)} 超過</span> · {expenses.length} 件の支出
             </>
           )}
-        </div>
+        </p>
 
-        <div className="mt-5 flex h-7 gap-2" role="progressbar" aria-valuenow={Math.round(ratio * 100)} aria-valuemin={0} aria-valuemax={100}>
-          <div
-            className={`rounded-lg bg-primary transition-[flex-basis] ${HATCH}`}
-            style={{ flexBasis: `${ratio * 100}%` }}
-          />
-          {ratio < 1 && <div className="flex-1 rounded-lg bg-neutral-100" />}
+        <div className="mt-5">
+          <SegmentBar height="md" fillRemainder label="予算の消化率" segments={[{ ratio, className: `bg-primary ${HATCHED}` }]} />
         </div>
 
         <div className="mt-auto flex items-center justify-between pt-5 text-small">
           <span className="flex shrink-0 items-center gap-2 whitespace-nowrap">
-            <span className="size-2.5 rounded-full bg-primary ring-2 ring-primary/30" />
+            <span className="size-2 rounded-full bg-primary ring-2 ring-primary/30" />
             予算
           </span>
           {editing ? (
-            <form onSubmit={handleSubmit} className="flex items-center gap-2">
+            <form onSubmit={handleSubmit} className="flex items-center gap-1">
               <Input name="budget" type="number" min={0} step={1000} defaultValue={budget ?? ''} className="h-7 w-24 px-2 text-right" autoFocus />
-              <Button size="sm" variant="primary" type="submit" aria-label="保存">
-                <Check size={ICON.sm} />
-              </Button>
-              <Button size="sm" variant="ghost" onClick={() => setEditing(false)} aria-label="キャンセル">
-                <X size={ICON.sm} />
-              </Button>
+              <Button size="sm" variant="primary" type="submit" icon={Check} aria-label="保存" />
+              <IconButton icon={X} label="キャンセル" onClick={() => setEditing(false)} />
             </form>
           ) : (
-            <button type="button" onClick={() => setEditing(true)} className="flex items-center gap-2 text-fg-muted hover:text-fg-strong">
+            <button type="button" onClick={() => setEditing(true)} className="flex items-center gap-1 text-fg-muted hover:text-fg-strong">
               <span className="tabular-nums">{formatYen(budget)}</span>
-              <Pencil size={ICON.md} />
+              <Pencil size={ICON.sm} />
             </button>
           )}
         </div>
-      </div>
-    </ShellCard>
+      </CardBody>
+    </Card>
   )
 }

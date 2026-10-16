@@ -40,6 +40,15 @@
   --text-caption: 11px;
   --text-caption--line-height: 14px;
 
+  --animate-slide-in: slide-in 0.2s ease-out;
+  --animate-fade-in: fade-in 0.2s ease-out;
+  @keyframes slide-in {
+    from { transform: translateX(100%); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
+
   --font-sans: "游ゴシック体", "YuGothic", "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック", "Yu Gothic", "Noto Sans JP", sans-serif;
 }
 

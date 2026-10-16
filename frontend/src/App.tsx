@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react'
 
 import { Calendar, Clock, Flag, Pencil, Plus, Route } from 'lucide-react'
 
-import { Sidebar } from '@/components/layout/Sidebar'
-import { TopBar } from '@/components/layout/TopBar'
+import { AppShell } from '@/components/layout/AppShell'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { AddPlaceForm, type AddPlaceInput } from '@/components/trip/AddPlaceForm'
 import { BudgetCard } from '@/components/trip/BudgetCard'
 import { ItineraryCard } from '@/components/trip/ItineraryCard'
@@ -12,15 +12,14 @@ import { TripEditForm } from '@/components/trip/TripEditForm'
 import { WarningsCard } from '@/components/trip/WarningsCard'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { Dialog } from '@/components/ui/Dialog'
-import { ShellCard } from '@/components/ui/ShellCard'
+import { Card, CardBody, CardHeader } from '@/components/ui/Card'
+import { SideView } from '@/components/ui/SideView'
 import { sampleData } from '@/data/sample'
 import { DISPLAY_TIME_ZONE, formatDate, formatTime } from '@/lib/format'
 import { buildTimeline } from '@/lib/schedule'
 import type { Place, Trip, TripPlace } from '@/types'
-import { ICON } from '@/lib/ui'
 
-type DialogKind = 'none' | 'editTrip' | 'addPlace'
+type Panel = 'none' | 'editTrip' | 'addPlace'
 
 // モック: バックエンド未接続のため、サンプルデータをメモリ上で編集する
 export default function App() {
@@ -28,7 +27,7 @@ export default function App() {
   const [trip, setTrip] = useState<Trip>(firstTrip)
   const [places, setPlaces] = useState<Place[]>(sampleData.places)
   const [tripPlaces, setTripPlaces] = useState<TripPlace[]>(sampleData.trip_places.filter((tp) => tp.trip_id === firstTrip.id))
-  const [dialog, setDialog] = useState<DialogKind>('none')
+  const [panel, setPanel] = useState<Panel>('none')
   const expenses = sampleData.expenses.filter((e) => e.trip_id === firstTrip.id)
 
   const items = useMemo(() => buildTimeline(trip, tripPlaces, places), [trip, tripPlaces, places])
@@ -60,7 +59,7 @@ export default function App() {
         },
       ]),
     )
-    setDialog('none')
+    setPanel('none')
   }
 
   function handleMove(tripPlaceId: string, direction: -1 | 1) {
@@ -86,80 +85,65 @@ export default function App() {
   const end = new Date(trip.end_at)
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
+    <AppShell crumbs={['旅程', trip.name]}>
+      <PageHeader
+        title={trip.name}
+        badge={
+          <Badge tone="primary" icon={Flag} size="md">
+            モック
+          </Badge>
+        }
+        meta={[
+          { icon: Calendar, text: `${formatDate(start)} ${formatTime(start)} 〜 ${formatDate(end)} ${formatTime(end)}` },
+          { icon: Clock, text: DISPLAY_TIME_ZONE },
+        ]}
+        actions={
+          <>
+            <Button icon={Pencil} onClick={() => setPanel('editTrip')}>
+              旅行を編集
+            </Button>
+            <Button variant="primary" icon={Plus} onClick={() => setPanel('addPlace')}>
+              場所を追加
+            </Button>
+          </>
+        }
+      />
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar crumbs={['旅程', trip.name]} />
-
-        <main className="mx-auto w-full max-w-6xl flex-1 space-y-5 px-4 py-6 sm:px-6">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-heading font-semibold text-fg-strong">{trip.name}</h1>
-                <Badge tone="primary" icon={Flag} size="md">
-                  モック
-                </Badge>
-              </div>
-              <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-fg-muted">
-                <span className="flex items-center gap-1">
-                  <Calendar size={ICON.sm} />
-                  {formatDate(start)} {formatTime(start)} 〜 {formatDate(end)} {formatTime(end)}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock size={ICON.sm} />
-                  {DISPLAY_TIME_ZONE}
-                </span>
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={() => setDialog('editTrip')}>
-                <Pencil size={ICON.md} />
-                旅行を編集
-              </Button>
-              <Button variant="primary" onClick={() => setDialog('addPlace')}>
-                <Plus size={ICON.md} />
-                場所を追加
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <BudgetCard budget={trip.budget} expenses={expenses} onBudgetChange={(budget) => setTrip((t) => ({ ...t, budget }))} />
-            <ItineraryCard items={items} />
-            <WarningsCard items={items} />
-          </div>
-
-          <ShellCard
-            icon={Route}
-            title="タイムライン"
-            subtitle="訪問順に到着・出発時刻を計算"
-            bodyClassName="p-2 sm:p-3"
-            action={
-              <Button variant="primary" size="sm" onClick={() => setDialog('addPlace')}>
-                <Plus size={ICON.sm} />
-                場所を追加
-              </Button>
-            }
-          >
-            <Timeline items={items} onMove={handleMove} onRemove={handleRemove} onStayChange={handleStayChange} />
-          </ShellCard>
-        </main>
+      <div className="grid gap-5 md:grid-cols-3">
+        <BudgetCard budget={trip.budget} expenses={expenses} onBudgetChange={(budget) => setTrip((t) => ({ ...t, budget }))} />
+        <ItineraryCard items={items} />
+        <WarningsCard items={items} />
       </div>
 
-      <Dialog open={dialog === 'editTrip'} title="旅行を編集" onClose={() => setDialog('none')}>
+      <Card>
+        <CardHeader
+          icon={Route}
+          title="タイムライン"
+          subtitle="訪問順に到着・出発時刻を計算"
+          action={
+            <Button variant="primary" size="sm" icon={Plus} onClick={() => setPanel('addPlace')}>
+              場所を追加
+            </Button>
+          }
+        />
+        <CardBody>
+          <Timeline items={items} onMove={handleMove} onRemove={handleRemove} onStayChange={handleStayChange} />
+        </CardBody>
+      </Card>
+
+      <SideView open={panel === 'editTrip'} title="旅行を編集" description="旅行名・期間・予算" onClose={() => setPanel('none')}>
         <TripEditForm
           trip={trip}
           onSubmit={(next) => {
             setTrip(next)
-            setDialog('none')
+            setPanel('none')
           }}
-          onCancel={() => setDialog('none')}
+          onCancel={() => setPanel('none')}
         />
-      </Dialog>
-      <Dialog open={dialog === 'addPlace'} title="場所を追加" onClose={() => setDialog('none')}>
-        <AddPlaceForm existingPlaces={places} onAdd={handleAdd} onCancel={() => setDialog('none')} />
-      </Dialog>
-    </div>
+      </SideView>
+      <SideView open={panel === 'addPlace'} title="場所を追加" description="タイムラインの末尾に追加する" onClose={() => setPanel('none')}>
+        <AddPlaceForm existingPlaces={places} onAdd={handleAdd} onCancel={() => setPanel('none')} />
+      </SideView>
+    </AppShell>
   )
 }

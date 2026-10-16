@@ -1,6 +1,8 @@
 import { Route } from 'lucide-react'
 
-import { ShellCard } from '@/components/ui/ShellCard'
+import { Card, CardBody, CardHeader } from '@/components/ui/Card'
+import { SegmentBar } from '@/components/ui/SegmentBar'
+import { Stat } from '@/components/ui/Stat'
 import { formatMinutes, formatTime } from '@/lib/format'
 import type { TimelineItem } from '@/lib/schedule'
 
@@ -16,35 +18,31 @@ export function ItineraryCard({ items }: { items: TimelineItem[] }) {
   ]
 
   return (
-    <ShellCard icon={Route} title="行程" subtitle="移動と滞在の内訳">
-      <div className="flex h-full flex-col">
-        <div className="flex items-baseline justify-between">
-          <div className="text-display font-semibold text-fg-strong tabular-nums">{items.length} 箇所</div>
-          <div className="text-small text-fg-muted">合計 {formatMinutes(total)}</div>
-        </div>
+    <Card>
+      <CardHeader icon={Route} title="行程" subtitle="移動と滞在の内訳" />
+      <CardBody>
+        <Stat value={items.length} unit="箇所" note={`合計 ${formatMinutes(total)}`} />
 
-        <div className="mt-5 flex h-3 gap-1">
-          {segments.map((s) => (
-            <div key={s.label} className={`rounded-full ${s.color}`} style={{ flexBasis: total ? `${(s.minutes / total) * 100}%` : '0%' }} />
-          ))}
+        <div className="mt-5">
+          <SegmentBar label="移動と滞在の割合" segments={segments.map((s) => ({ ratio: total ? s.minutes / total : 0, className: s.color }))} />
         </div>
 
         <ul className="mt-4 space-y-2 text-small">
           {segments.map((s) => (
             <li key={s.label} className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-fg-muted">
-                <span className={`size-2.5 rounded-full ${s.color}`} />
+                <span className={`size-2 rounded-full ${s.color}`} />
                 {s.label}
               </span>
-              <span className="font-medium tabular-nums">{formatMinutes(s.minutes)}</span>
+              <span className="font-medium text-fg-strong tabular-nums">{formatMinutes(s.minutes)}</span>
             </li>
           ))}
           <li className="flex items-center justify-between border-t border-neutral-100 pt-2">
             <span className="text-fg-muted">最終地点を出る</span>
-            <span className="font-medium tabular-nums">{last ? formatTime(last.depart) : '—'}</span>
+            <span className="font-medium text-fg-strong tabular-nums">{last ? formatTime(last.depart) : '—'}</span>
           </li>
         </ul>
-      </div>
-    </ShellCard>
+      </CardBody>
+    </Card>
   )
 }

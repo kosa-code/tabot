@@ -84,3 +84,36 @@
 | バッジ、進捗バーの丸 | `rounded-full` |
 
 影は薄く(`shadow-[0_1px_2px_rgba(0,0,0,0.04)]`)。浮かせるのはダイアログだけ(`shadow-xl`)。
+
+## 部品
+
+画面は `components/ui` と `components/layout` の部品を組み合わせて作る。画面側(`App.tsx` や `components/trip`)で見た目のクラスを直接書かない。
+
+### ui
+
+| 部品 | 役割 | サイズ・種類 |
+|---|---|---|
+| `Button` | 文字のボタン。`icon` で左にアイコン | size `sm`(28px, small 文字, ICON.sm) / `md`(36px, body 文字, ICON.md)。variant `primary` / `secondary`(既定) / `ghost` / `danger` |
+| `IconButton` | アイコンだけのボタン。`label` 必須 | size `sm`(28px) / `md`(36px)。variant `ghost` / `danger` |
+| `Badge` | 淡い地のピル。`icon` で左にアイコン | size `sm`(caption 文字, ICON.xs) / `md`(small 文字, ICON.sm)。tone `neutral` / `primary` / `secondary` / `mint` / `sky` / `brown` / `orange` |
+| `Card` / `CardHeader` / `CardBody` | 白い一重のカード。見出しにアイコン・タイトル・サブタイトル・右側の操作 | 本文の padding は `4`。カードの中にカードを置かない |
+| `SideView` | 右から出るパネル。フォームや詳細に使う。モーダルは使わない | 幅 448px(`max-w-md`)。Esc と背景クリックで閉じる |
+| `Field` / `Input` / `Select` | ラベル付きの入力欄 | 高さ 36px、body 文字 |
+| `SegmentedControl` | 少数の選択肢の切り替え | small 文字 |
+| `Stat` | KPI の数字。`unit` で単位、`note` で右の補足 | display 文字 |
+| `SegmentBar` | 割合のバー。`HATCHED` で斜線の塗り | height `sm`(12px) / `md`(28px) |
+
+### layout
+
+| 部品 | 役割 |
+|---|---|
+| `AppShell` | サイドバー + 上部バー + 本文の枠。本文は `max-w-6xl`、左右 padding `6`、セクション間 `5` |
+| `Sidebar` | 左の固定ナビゲーション。項目は `NavItem` |
+| `TopBar` | 上部バー。パンくずと通知・ユーザー |
+| `PageHeader` | 画面の見出し。タイトル、バッジ、`meta`(アイコン + 文字)、右側の操作 |
+
+### 新しい部品を作るとき
+
+- 同じ見た目が2箇所に出たら部品にする
+- サイズは `sm` / `md` の2段階から始める。3段階目が要るまで増やさない
+- 色・サイズ・余白はこの文書のトークンだけを使う

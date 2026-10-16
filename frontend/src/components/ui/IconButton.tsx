@@ -1,0 +1,40 @@
+import type { LucideIcon } from 'lucide-react'
+import type { ButtonHTMLAttributes } from 'react'
+
+import { cn } from '@/lib/cn'
+import { ICON } from '@/lib/ui'
+
+type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
+  icon: LucideIcon
+  /** 読み上げとツールチップに使う。必須 */
+  label: string
+  size?: 'sm' | 'md'
+  variant?: 'ghost' | 'danger'
+}
+
+const SIZE = { sm: 'size-7', md: 'size-9' }
+const VARIANT = {
+  ghost: 'text-fg-subtle hover:bg-secondary-light/25 hover:text-fg-strong',
+  danger: 'text-fg-subtle hover:bg-red-50 hover:text-red-600',
+}
+
+/** アイコンだけのボタン。文字を持たないので label を必ず付ける */
+export function IconButton({ icon: IconComponent, label, size = 'sm', variant = 'ghost', className, type = 'button', ...rest }: Props) {
+  return (
+    <button
+      type={type}
+      aria-label={label}
+      title={label}
+      className={cn(
+        'flex items-center justify-center rounded-lg transition-colors disabled:opacity-30',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
+        SIZE[size],
+        VARIANT[variant],
+        className,
+      )}
+      {...rest}
+    >
+      <IconComponent size={size === 'sm' ? ICON.sm : ICON.md} />
+    </button>
+  )
+}
