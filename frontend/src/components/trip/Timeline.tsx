@@ -46,7 +46,7 @@ export function Timeline({ items, onMove, onRemove, onStayChange, onAdd }: Props
   }, [])
 
   return (
-    <ol className="relative max-w-3xl pl-7">
+    <ol className="relative pl-7">
       <span aria-hidden className="absolute inset-y-0 left-0 w-px -translate-x-1/2 bg-neutral-200" />
       {items.map((item, index) => {
         const prev = items[index - 1]
