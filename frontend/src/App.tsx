@@ -119,7 +119,6 @@ export default function App() {
         <CardHeader
           icon={Route}
           title="タイムライン"
-          subtitle="訪問順に到着・出発時刻を計算"
           action={
             <Button variant="primary" size="sm" icon={Plus} onClick={() => setPanel('addPlace')}>
               場所を追加
