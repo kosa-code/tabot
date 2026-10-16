@@ -66,12 +66,12 @@ export function Timeline({ items, onMove, onRemove, onStayChange, onAdd }: Props
             )}
             {newDay && (
               <li className={index > 0 ? 'pt-12 pb-4' : 'pb-4'}>
-                <div className="relative flex items-baseline gap-3">
-                  <span aria-hidden className={cn(NODE, 'top-1/2 flex size-5 -translate-y-1/2 items-center justify-center bg-secondary-dark text-caption text-fg-inverse')}>
-                    {day}
-                  </span>
-                  <h2 className="text-heading text-secondary-dark">{formatDate(item.arrive)}</h2>
-                  <span className="text-small text-fg-muted">{day}日目</span>
+                <div className="relative flex items-baseline gap-4">
+                  <span aria-hidden className={cn(NODE, 'top-1/2 size-3 -translate-y-1/2 bg-fg-strong')} />
+                  <h2 className="font-display text-display font-light text-fg-strong lining-nums">
+                    Day {String(day).padStart(2, '0')}
+                  </h2>
+                  <span className="text-small text-fg-muted">{formatDate(item.arrive)}</span>
                 </div>
               </li>
             )}

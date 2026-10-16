@@ -1,3 +1,5 @@
+@import "@fontsource/cormorant-garamond/300.css";
+@import "@fontsource/cormorant-garamond/400.css";
 @import "tailwindcss";
 
 /*
@@ -9,6 +11,9 @@
     fg        : 文字色。強 → 通常 → 補助 → 淡 → 反転 のグレースケール
   文字サイズ
     display / heading / title / body / small / caption の6段階。太さではなくサイズ・色・字間で階層を作る
+  書体
+    sans    : 游ゴシック。本文と見出し
+    display : Cormorant Garamond。Day 01 のような飾りの英数字だけに使う
 */
 @theme {
   --color-primary: #fb8500;
@@ -51,6 +56,7 @@
     from { opacity: 0; }
   }
 
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
   --font-sans: "游ゴシック体", "YuGothic", "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック", "Yu Gothic", "Noto Sans JP", sans-serif;
 }
 

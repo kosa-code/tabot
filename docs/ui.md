@@ -22,7 +22,7 @@
 
 | トークン | 値 | 用途 |
 |---|---|---|
-| `fg-strong` | `#15181d` | 場所名、ファクト行の値、入力した文字 |
+| `fg-strong` | `#15181d` | 場所名、ファクト行の値、入力した文字、日付の区切り「Day 01」とレールの黒い丸 |
 | `fg` | `#343a40` | 本文(既定) |
 | `fg-muted` | `#6b7280` | 補足、ラベル、時刻、カテゴリ、ghost ボタン |
 | `fg-subtle` | `#9ca3af` | 出発時刻、移動時間、placeholder、未選択のアイコン |
@@ -34,7 +34,7 @@
 |---|---|---|
 | `primary` | `#fb8500` | 画面に1つの主ボタン。警告の文字とレールの丸。予算の超過 |
 | `primary-light` | `#ffb703` | primary の淡い地(Badge `primary`) |
-| `secondary-dark` | `#023047` | 見出し(h1・日付・SideView)、ワードマーク、選択中のナビ、入力のフォーカス線、日のマーカー |
+| `secondary-dark` | `#023047` | 見出し(h1・SideView)、ワードマーク、選択中のナビ、入力のフォーカス線 |
 | `secondary` | `#219ebc` | 完了の丸、予算バー |
 | `secondary-light` | `#8ecae6` | 選択中・ホバーの淡い地(Badge `secondary`) |
 
@@ -46,15 +46,22 @@
 
 | トークン | サイズ / 行送り | 字間 | 用途 |
 |---|---|---|---|
-| `display` | 40 / 48 | -0.01em | 旅行名(h1)。画面に1つ |
-| `heading` | 24 / 32 | 0 | 日付の区切り、SideView の見出し |
+| `display` | 40 / 48 | -0.01em | 旅行名(h1)と、タイムラインの日付の区切り「Day 01」(`font-display`) |
+| `heading` | 24 / 32 | 0 | SideView の見出し |
 | `title` | 18 / 28 | 0 | ファクト行の値、場所名、md の入力欄、ワードマーク |
 | `body` | 14 / 22 | 0.01em | 本文(既定)、時刻、ボタン、sm の入力欄 |
 | `small` | 12 / 18 | 0.02em | 補足、ラベル、カテゴリ、移動時間、警告、ナビ、sm ボタン、Badge(md) |
-| `caption` | 11 / 16 | 0.04em | 出発時刻、日のマーカーの数字、Badge(sm)、画面最下部の注記 |
+| `caption` | 11 / 16 | 0.04em | 出発時刻、Badge(sm)、画面最下部の注記 |
 
 - 数字は `tabular-nums` で桁を揃える
 - 見出し(`display` / `heading`)の色は `secondary-dark`
+
+### 書体
+
+| トークン | 書体 | 用途 |
+|---|---|---|
+| `font-sans` | 游ゴシック(OS同梱。無ければ Noto Sans JP) | 本文と見出しの既定 |
+| `font-display` | Cormorant Garamond(`@fontsource/cormorant-garamond` 300 / 400 で自己ホスト) | 「Day 01」のような飾りの英数字だけ。`font-light` + `lining-nums` で使う。日本語や本文には使わない |
 
 ## 余白
 
@@ -95,7 +102,7 @@
 | 用途 | クラス |
 |---|---|
 | ボタン、アイコンボタン、行のホバー地、InlineEdit | `rounded-lg` |
-| Badge、レールの丸、日のマーカー | `rounded-full` |
+| Badge、レールの丸 | `rounded-full` |
 | 入力欄 | `rounded-none`(下線型) |
 
 `rounded-lg` が最大。`xl` / `2xl` は使わない。影は SideView の `shadow-xl` だけ。
@@ -141,7 +148,7 @@
 | 部品 | 役割 |
 |---|---|
 | `TripFacts` | 期間 / 行程 / 予算 / 注意の `FactList`。注意の件数を押すと最初の警告行へ移動 |
-| `Timeline` | レールに沿った旅程。日付は `heading`、場所名は `title`、滞在は `InlineEdit`、警告は `primary` の文字と丸 |
+| `Timeline` | レールに沿った旅程。日付の区切りは `font-display` の「Day 01」と黒い丸、場所名は `title`、滞在は `InlineEdit`、警告は `primary` の文字と丸 |
 | `TripEditForm` / `AddPlaceForm` | SideView の中のフォーム |
 
 ### 新しい部品を作るとき
