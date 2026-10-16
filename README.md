@@ -136,7 +136,7 @@ npm run dev
 | `secondary` | `#219ebc` | カード見出しのアイコン、選択中のナビ、フォーカス、行程バー(移動) |
 | `secondary-light` | `#8ecae6` | 選択中・ホバーの淡い地、行程バー(滞在) |
 
-フォントは英数字を [Inter](https://rsms.me/inter/)(`@fontsource-variable/inter` で自己ホスト)、日本語を Hiragino Sans / Noto Sans JP にフォールバックさせる。数字は `tabular-nums` で桁を揃える。
+フォントは游ゴシック(OS同梱。macOS は 游ゴシック体、Windows は Yu Gothic Medium を優先)を使い、無い環境では Noto Sans JP にフォールバックする。数字は `tabular-nums` で桁を揃える。
 
 アイコンは [lucide-react](https://lucide.dev/) を使う。自前のSVGは持たない。
 
