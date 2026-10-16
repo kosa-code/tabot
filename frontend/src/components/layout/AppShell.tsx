@@ -28,13 +28,12 @@ function NavItem({ label, active, size }: NavLink & { size: 'lg' | 'sm' }) {
   )
 }
 
-/** 一面の地に、左の大きなナビと本文。枠線や影で領域を作らない */
+/** 一面の地に、左のナビと本文。ワードマークは置かず、枠線や影で領域を作らない */
 export function AppShell({ nav, children }: Props) {
   return (
     <div className="flex min-h-screen">
-      <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col px-12 pt-10 lg:flex">
-        <span className="text-title text-fg-strong">tabot</span>
-        <nav aria-label="メニュー" className="mt-20 space-y-8">
+      <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col px-12 pt-16 lg:flex">
+        <nav aria-label="メニュー" className="space-y-8">
           {nav.map((n) => (
             <NavItem key={n.label} {...n} size="lg" />
           ))}
@@ -42,8 +41,7 @@ export function AppShell({ nav, children }: Props) {
       </aside>
 
       <div className="min-w-0 flex-1">
-        <header className="flex items-center justify-between px-6 pt-8 lg:hidden">
-          <span className="text-title text-fg-strong">tabot</span>
+        <header className="px-6 pt-8 lg:hidden">
           <nav aria-label="メニュー" className="flex gap-6">
             {nav.map((n) => (
               <NavItem key={n.label} {...n} size="sm" />

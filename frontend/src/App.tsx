@@ -41,7 +41,7 @@ export default function App() {
   const end = new Date(trip.end_at)
 
   return (
-    <AppShell nav={[{ label: '旅程', active: true }, { label: '場所' }, { label: '経費' }, { label: '割り勘' }, { label: '設定' }]}>
+    <AppShell nav={[{ label: '旅程', active: true }, { label: '場所' }, { label: '設定' }]}>
       <PageHeader
         title={trip.name}
         meta={`${formatDateTimeLong(start)} – ${formatDateTimeLong(end, false)} · ${DISPLAY_TIME_ZONE_LABEL}`}
