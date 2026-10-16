@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/Button'
 import { SideView } from '@/components/ui/SideView'
 import { sampleData } from '@/data/sample'
 import { DISPLAY_TIME_ZONE_LABEL, formatDateTimeLong } from '@/lib/format'
-import { timelineRowId } from '@/lib/ids'
 import { buildTimeline } from '@/lib/schedule'
 import { initTripState, tripReducer } from '@/lib/tripState'
 
@@ -38,12 +37,6 @@ export default function App() {
     closePanel()
   }
 
-  function jumpToWarning() {
-    const first = items.find((i) => i.warnings.length > 0)
-    if (!first) return
-    document.getElementById(timelineRowId(first.tripPlace.id))?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  }
-
   const start = new Date(trip.start_at)
   const end = new Date(trip.end_at)
 
@@ -64,7 +57,7 @@ export default function App() {
         }
       />
 
-      <TripFacts trip={trip} items={items} expenses={expenses} onJumpToWarning={jumpToWarning} />
+      <TripFacts trip={trip} expenses={expenses} />
 
       <Timeline
         items={items}

@@ -148,7 +148,7 @@
 
 | 部品 | 役割 |
 |---|---|
-| `TripFacts` | 期間 / 行程 / 予算 / 注意の `FactList`。注意の件数を押すと最初の警告行へ移動 |
+| `TripFacts` | 期間 / 予算の `FactList`。行程と注意はタイムラインで分かるので出さない |
 | `Timeline` | レールに沿った旅程。日付の区切りは `font-display` の「Day 01」と黒い丸、場所名は `title`、滞在は `InlineEdit`、警告は `primary` の文字と丸 |
 | `TripEditForm` / `AddPlaceForm` | SideView の中のフォーム |
 
