@@ -19,7 +19,7 @@ function NavItem({ label, active }: NavLink) {
       className={cn(
         'border-b pb-1 text-small transition-colors',
         FOCUS_RING,
-        active ? 'border-secondary-dark text-secondary-dark' : 'border-transparent text-fg-muted hover:text-fg-strong',
+        active ? 'border-secondary-dark text-fg-strong' : 'border-transparent text-fg-muted hover:text-fg-strong',
       )}
     >
       {label}
@@ -32,7 +32,7 @@ export function AppShell({ nav, children }: Props) {
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6 lg:px-16">
-        <span className="text-title text-secondary-dark">tabot</span>
+        <span className="text-title text-fg-strong">tabot</span>
         <nav aria-label="メニュー" className="flex items-center gap-6">
           {nav.map((n) => (
             <NavItem key={n.label} {...n} />

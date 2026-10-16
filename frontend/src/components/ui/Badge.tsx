@@ -7,8 +7,8 @@ import { ICON, STROKE, type Size, type Tone } from '@/lib/ui'
 // 淡い地 + 同系色の文字
 const TONE: Record<Tone, string> = {
   neutral: 'bg-neutral-100 text-fg',
-  primary: 'bg-primary-light/20 text-primary',
-  secondary: 'bg-secondary-light/30 text-secondary-dark',
+  primary: 'bg-primary-light/20 text-fg-strong',
+  secondary: 'bg-secondary-light/30 text-fg-strong',
 }
 
 type Props = {

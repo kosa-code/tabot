@@ -49,7 +49,7 @@ export function SideView({ open, title, onClose, children }: Props) {
       ].join(' ')}
     >
       <header className="flex items-center justify-between gap-4 px-10 pt-10 pb-8">
-        <h2 className="text-heading text-secondary-dark">{title}</h2>
+        <h2 className="text-heading text-fg-strong">{title}</h2>
         <IconButton icon={X} label="閉じる" size="md" onClick={onClose} />
       </header>
       <div className="flex flex-1 flex-col overflow-y-auto px-10 pb-10">{children}</div>

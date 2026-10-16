@@ -7,8 +7,8 @@
 
   色
     primary   : オレンジ。画面に1つの主ボタンと、警告だけに使う
-    secondary : 紺〜水色。見出し(dark)、選択中・フォーカス・完了(DEFAULT)、淡い地(light)
-    fg        : 文字色。強 → 通常 → 補助 → 淡 → 反転 のグレースケール
+    secondary : 紺〜水色。選択中の下線・フォーカス線(dark)、完了の丸とバー(DEFAULT)、淡い地(light)。文字色には使わない
+    fg        : 文字色。黒 → 白の無彩色だけ(#111 / #333 / #666 / #999 / #fff)。文字にブランド色は使わない(警告の primary を除く)
   文字サイズ
     display / heading / title / body / small / caption の6段階。太さではなくサイズ・色・字間で階層を作る
   書体
@@ -22,10 +22,10 @@
   --color-secondary: #219ebc;
   --color-secondary-light: #8ecae6;
 
-  --color-fg-strong: #15181d;
-  --color-fg: #343a40;
-  --color-fg-muted: #6b7280;
-  --color-fg-subtle: #9ca3af;
+  --color-fg-strong: #111111;
+  --color-fg: #333333;
+  --color-fg-muted: #666666;
+  --color-fg-subtle: #999999;
   --color-fg-inverse: #ffffff;
 
   --color-paper: #ffffff;

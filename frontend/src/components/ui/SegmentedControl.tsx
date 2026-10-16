@@ -24,7 +24,7 @@ export function SegmentedControl<T extends string>({ label, options, value, onCh
           className={cn(
             '-mb-px border-b-2 pb-2 transition-colors',
             FOCUS_RING,
-            value === o.value ? 'border-secondary-dark text-secondary-dark' : 'border-transparent text-fg-muted hover:text-fg-strong',
+            value === o.value ? 'border-secondary-dark text-fg-strong' : 'border-transparent text-fg-muted hover:text-fg-strong',
           )}
         >
           {o.label}

@@ -12,7 +12,7 @@ type Props = {
 export function PageHeader({ title, meta, actions }: Props) {
   return (
     <div>
-      <h1 className="max-w-3xl text-display text-secondary-dark">{title}</h1>
+      <h1 className="max-w-3xl text-display text-fg-strong">{title}</h1>
       {meta && <p className="mt-4 text-body text-fg-muted">{meta}</p>}
       {actions && <div className="mt-8 flex items-center gap-6">{actions}</div>}
     </div>
