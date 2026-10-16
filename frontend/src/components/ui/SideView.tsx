@@ -10,13 +10,17 @@ type Props = {
   children: ReactNode
 }
 
+const ANIMATION_MS = 200
+
 /**
  * 右から出るサイドビュー。ネイティブ <dialog> に乗せ、フォーカスの移動・戻し・閉じ込め、
- * Esc、背景の無効化はブラウザに任せる。影を使うのはこの部品だけ
+ * Esc、背景の無効化はブラウザに任せる。閉じるときはスライドアウトを再生してから close() する。
+ * 影を使うのはこの部品だけ
  */
 export function SideView({ open, title, onClose, children }: Props) {
   const ref = useRef<HTMLDialogElement>(null)
   const onCloseRef = useRef(onClose)
+
   useEffect(() => {
     onCloseRef.current = onClose
   }, [onClose])
@@ -24,8 +28,34 @@ export function SideView({ open, title, onClose, children }: Props) {
   useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
-    if (open && !dialog.open) dialog.showModal()
-    if (!open && dialog.open) dialog.close()
+
+    if (open) {
+      delete dialog.dataset.closing
+      if (!dialog.open) dialog.showModal()
+      return
+    }
+    if (!dialog.open) return
+
+    // 閉じる: アニメーションを再生し、終わってから close() する
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      dialog.close()
+      return
+    }
+    // 閉じ中の印は state ではなく属性で持つ(アニメーション用の一時的な見た目なので)
+    dialog.dataset.closing = 'true'
+    let done = false
+    const finish = () => {
+      if (done) return
+      done = true
+      dialog.close()
+      delete dialog.dataset.closing
+    }
+    dialog.addEventListener('animationend', finish, { once: true })
+    const timer = window.setTimeout(finish, ANIMATION_MS + 50)
+    return () => {
+      dialog.removeEventListener('animationend', finish)
+      window.clearTimeout(timer)
+    }
   }, [open])
 
   return (
@@ -44,8 +74,8 @@ export function SideView({ open, title, onClose, children }: Props) {
         'fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-lg',
         // 閉じているときは非表示(display を上書きしないよう open: 付きで指定する)
         'hidden open:flex flex-col bg-white p-0 text-fg shadow-xl',
-        'open:animate-slide-in motion-reduce:animate-none',
-        'backdrop:bg-fg-strong/20 backdrop:animate-fade-in motion-reduce:backdrop:animate-none',
+        'open:animate-slide-in data-closing:animate-slide-out motion-reduce:animate-none',
+        'backdrop:bg-fg-strong/20 backdrop:animate-fade-in data-closing:backdrop:animate-fade-out motion-reduce:backdrop:animate-none',
       ].join(' ')}
     >
       <header className="flex items-center justify-between gap-4 px-10 pt-10 pb-8">

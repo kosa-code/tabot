@@ -49,12 +49,20 @@
   --text-caption--letter-spacing: 0.04em;
 
   --animate-slide-in: slide-in 0.2s ease-out;
+  --animate-slide-out: slide-out 0.2s ease-in forwards;
   --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-fade-out: fade-out 0.2s ease-in forwards;
   @keyframes slide-in {
     from { transform: translateX(100%); }
   }
+  @keyframes slide-out {
+    to { transform: translateX(100%); }
+  }
   @keyframes fade-in {
     from { opacity: 0; }
+  }
+  @keyframes fade-out {
+    to { opacity: 0; }
   }
 
   --font-display: "Cormorant Garamond", "Times New Roman", serif;
