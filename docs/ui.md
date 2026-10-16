@@ -96,7 +96,7 @@
 | `Button` | 文字のボタン。`icon` で左にアイコン | size `sm`(28px, small 文字, ICON.sm) / `md`(36px, body 文字, ICON.md)。variant `primary` / `secondary`(既定) / `ghost` / `danger` |
 | `IconButton` | アイコンだけのボタン。`label` 必須 | size `sm`(28px) / `md`(36px)。variant `ghost` / `danger` |
 | `Badge` | 淡い地のピル。`icon` で左にアイコン | size `sm`(caption 文字, ICON.xs) / `md`(small 文字, ICON.sm)。tone `neutral` / `primary` / `secondary` / `mint` / `sky` / `brown` / `orange` |
-| `Card` / `CardHeader` / `CardBody` | 白い一重のカード。見出しにアイコン・タイトル・サブタイトル・右側の操作 | 本文の padding は `4`。カードの中にカードを置かない |
+| `Card` / `CardHeader` / `CardBody` | 白い一重のカード。見出しはタイトルと右側の操作だけ。アイコンは付けない | 本文の padding は `4`。カードの中にカードを置かない |
 | `SideView` | 右から出るパネル。フォームや詳細に使う。モーダルは使わない | 幅 448px(`max-w-md`)。Esc と背景クリックで閉じる |
 | `Field` / `Input` / `Select` | ラベル付きの入力欄 | 高さ 36px、body 文字 |
 | `SegmentedControl` | 少数の選択肢の切り替え | small 文字 |

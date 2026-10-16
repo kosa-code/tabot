@@ -1,5 +1,3 @@
-import { Route } from 'lucide-react'
-
 import { Card, CardBody, CardHeader } from '@/components/ui/Card'
 import { SegmentBar } from '@/components/ui/SegmentBar'
 import { Stat } from '@/components/ui/Stat'
@@ -19,7 +17,7 @@ export function ItineraryCard({ items }: { items: TimelineItem[] }) {
 
   return (
     <Card>
-      <CardHeader icon={Route} title="行程" />
+      <CardHeader title="行程" />
       <CardBody>
         <Stat value={items.length} unit="箇所" note={`合計 ${formatMinutes(total)}`} />
 

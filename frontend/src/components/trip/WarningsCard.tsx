@@ -11,7 +11,7 @@ export function WarningsCard({ items }: { items: TimelineItem[] }) {
 
   return (
     <Card>
-      <CardHeader icon={TriangleAlert} title="注意" />
+      <CardHeader title="注意" />
       <CardBody>
         <Stat value={warnings.length} unit="件" />
         {warnings.length === 0 ? (

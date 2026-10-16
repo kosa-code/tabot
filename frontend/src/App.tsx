@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 
-import { Calendar, Clock, Flag, Pencil, Plus, Route } from 'lucide-react'
+import { Calendar, Clock, Flag, Pencil, Plus } from 'lucide-react'
 
 import { AppShell } from '@/components/layout/AppShell'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -117,7 +117,6 @@ export default function App() {
 
       <Card>
         <CardHeader
-          icon={Route}
           title="タイムライン"
           action={
             <Button variant="primary" size="sm" icon={Plus} onClick={() => setPanel('addPlace')}>
