@@ -45,11 +45,17 @@ tabot/
 │   │   ├── db.py        # SQLAlchemy engine / session / Base
 │   │   └── models.py    # テーブル定義(正はここ)
 │   ├── alembic/         # マイグレーション
+│   ├── data/
+│   │   └── sample.json  # 4テーブルと同じ構造のサンプルデータ(イタリア周遊)
 │   ├── alembic.ini
 │   ├── requirements.txt
 │   └── .env.example
 └── docs/
 ```
+
+## サンプルデータ
+
+`backend/data/sample.json` に、DBの4テーブルと同じ構造でヴェネツィア・フィレンツェ・ローマを回る旅程のサンプルを置いている。DBを立てずにCRUDやタイムラインのロジックを作るときの入力に使う。`start_time` / `end_time` は update_schedule が計算して埋める想定なので null にしている。
 
 ## セットアップ(backend)
 
