@@ -1,0 +1,80 @@
+@import "@fontsource/cormorant-garamond/300.css";
+@import "@fontsource/cormorant-garamond/400.css";
+@import "tailwindcss";
+
+/*
+  デザイントークン。ルールは docs/ui.md を参照。
+
+  色
+    primary   : オレンジ。画面に1つの主ボタンと、警告だけに使う
+    secondary : 紺〜水色。選択中の下線・フォーカス線(dark)、完了の丸とバー(DEFAULT)、淡い地(light)。文字色には使わない
+    fg        : 文字色。黒 → 白の無彩色だけ(#111 / #333 / #666 / #999 / #fff)。文字にブランド色は使わない(警告の primary を除く)
+  文字サイズ
+    display / heading / title / body / small / caption の6段階。太さではなくサイズ・色・字間で階層を作る
+  書体
+    sans    : 游ゴシック。本文と見出し
+    display : Cormorant Garamond。Day 01 のような飾りの英数字だけに使う
+*/
+@theme {
+  --color-primary: #fb8500;
+  --color-primary-light: #ffb703;
+  --color-secondary-dark: #023047;
+  --color-secondary: #219ebc;
+  --color-secondary-light: #8ecae6;
+
+  --color-fg-strong: #111111;
+  --color-fg: #333333;
+  --color-fg-muted: #666666;
+  --color-fg-subtle: #999999;
+  --color-fg-inverse: #ffffff;
+
+  --color-paper: #f5f3ee;
+  --color-paper-deep: #ebe8e0;
+
+  --text-display: 40px;
+  --text-display--line-height: 48px;
+  --text-display--letter-spacing: -0.01em;
+  --text-heading: 24px;
+  --text-heading--line-height: 32px;
+  --text-title: 18px;
+  --text-title--line-height: 28px;
+  --text-body: 14px;
+  --text-body--line-height: 22px;
+  --text-body--letter-spacing: 0.01em;
+  --text-small: 12px;
+  --text-small--line-height: 18px;
+  --text-small--letter-spacing: 0.02em;
+  --text-caption: 11px;
+  --text-caption--line-height: 16px;
+  --text-caption--letter-spacing: 0.04em;
+
+  --animate-slide-in: slide-in 0.2s ease-out;
+  --animate-slide-out: slide-out 0.2s ease-in forwards;
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-fade-out: fade-out 0.2s ease-in forwards;
+  @keyframes slide-in {
+    from { transform: translateX(100%); }
+  }
+  @keyframes slide-out {
+    to { transform: translateX(100%); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
+  @keyframes fade-out {
+    to { opacity: 0; }
+  }
+
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: "游ゴシック体", "YuGothic", "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+
+@layer base {
+  /* html の font-size は 16px のまま(rem 基準の幅・余白を縮めない)。本文サイズは body に当てる */
+  html {
+    @apply bg-paper;
+  }
+  body {
+    @apply font-sans text-body text-fg;
+  }
+}
