@@ -48,7 +48,7 @@ export function AppShell({ nav, children }: Props) {
             ))}
           </nav>
         </header>
-        <main className="mx-auto w-full max-w-4xl space-y-12 px-6 pt-16 pb-24 lg:px-16">{children}</main>
+        <main className="max-w-5xl space-y-12 px-6 pt-16 pb-24 lg:pr-24 lg:pl-16">{children}</main>
       </div>
     </div>
   )

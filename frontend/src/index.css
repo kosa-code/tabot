@@ -62,7 +62,11 @@
 }
 
 @layer base {
+  /* html の font-size は 16px のまま(rem 基準の幅・余白を縮めない)。本文サイズは body に当てる */
   html {
-    @apply bg-paper font-sans text-body text-fg;
+    @apply bg-paper;
+  }
+  body {
+    @apply font-sans text-body text-fg;
   }
 }
