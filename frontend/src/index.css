@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1f2328;
+  --color-paper: #f7f6f2;
+  --color-accent: #0e7490;
+  --color-accent-soft: #e0f2fe;
+  --font-sans: "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+}
+
+html {
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font-family: var(--font-sans);
+  font-size: 14px;
+}

@@ -16,7 +16,10 @@ AIは「何をしたいか」を理解し、時間・距離・金額の計算と
 
 ## 現在の状態
 
-Phase 1a(最小構成)の途中。バックエンドの土台とDBの4テーブル(users / trips / places / trip_places)まで作成済み。次は旅行CRUD。
+Phase 1a(最小構成)の途中。
+
+- backend: 土台とDBの4テーブル(users / trips / places / trip_places)まで作成済み。APIは `/health` のみ
+- frontend: サンプルデータをメモリ上で編集するモック。旅行の編集、場所の追加・削除・並び替え、滞在時間の変更、タイムライン表示(移動時間の仮計算と営業時間の警告つき)が動く。バックエンドとは未接続
 
 | Phase | 内容 |
 |---|---|
@@ -50,6 +53,14 @@ tabot/
 │   ├── alembic.ini
 │   ├── requirements.txt
 │   └── .env.example
+├── frontend/
+│   └── src/
+│       ├── App.tsx            # 画面全体。サンプルデータをstateとして持つ
+│       ├── components/ui/     # Button / Field / Card / Badge
+│       ├── components/trip/   # TripCard / AddPlaceForm / Timeline / TripSummary
+│       ├── lib/schedule.ts    # タイムライン計算(update_scheduleの仮置き)
+│       ├── lib/format.ts      # 日時・金額の表示
+│       └── data/sample.ts     # backend/data/sample.json を読み込む
 └── docs/
 ```
 
@@ -96,6 +107,20 @@ tabot/
    ```
 
    `http://127.0.0.1:8000/health` が `{"status":"ok"}` を返せば動いている。APIドキュメントは `http://127.0.0.1:8000/docs`。
+
+## セットアップ(frontend)
+
+前提: Node.js 20以上。
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+`http://localhost:5173/` でモックが開く。データは `backend/data/sample.json` を直接読み込んでおり、画面上の編集はリロードで元に戻る。
+
+タイムラインの計算(移動時間・到着時刻・営業時間チェック)は、バックエンドの update_schedule ができるまでの仮置きとして `frontend/src/lib/schedule.ts` に置いている。接続時にはAPIの結果に置き換える。
 
 ### モデルを変えたとき
 
