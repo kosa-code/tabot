@@ -23,10 +23,9 @@ Phase 1a(最小構成)の途中。
 
 - backend: 土台とDBの4テーブル(users / trips / places / trip_places)まで作成済み。APIは `/health` のみ
 - frontend: サンプルデータをメモリ上で編集するモック。バックエンドとは未接続
-  - サイドバー + 上部バーのダッシュボード構成
-  - 予算(支出との比較と進捗バー)・行程(移動と滞在の内訳)・注意(警告の一覧)のカード
-  - 縦のレールに沿ったタイムライン。移動時間の仮計算、営業時間と終了時刻の警告
-  - 旅行の編集と場所の追加は右から出るサイドビューで行う。並び替え・削除・滞在時間・予算はその場で変更できる
+  - 白一面の地に、旅行名のヒーロー、期間 / 行程 / 予算 / 注意のファクト行、レールに沿ったタイムライン。枠線と影は使わない
+  - タイムラインは日付・時刻・場所名・滞在・警告だけ。移動時間の仮計算、営業時間と終了時刻の警告
+  - 旅行の編集と場所の追加は右から出るサイドビュー(ネイティブ dialog)。並び替え・削除・滞在時間はその場で変更できる
 
 | Phase | 内容 |
 |---|---|
@@ -67,13 +66,14 @@ tabot/
 │   ├── src/
 │   │   ├── App.tsx              # 画面。部品を組み合わせ、サンプルデータを state として持つ
 │   │   ├── index.css            # Tailwind の読み込みとデザイントークン(@theme)
-│   │   ├── components/ui/       # Button / IconButton / Badge / Card / SideView / Field / SegmentedControl / Stat / SegmentBar
-│   │   ├── components/layout/   # AppShell / Sidebar / TopBar / PageHeader
-│   │   ├── components/trip/     # BudgetCard / ItineraryCard / WarningsCard / Timeline / TripEditForm / AddPlaceForm
-│   │   ├── lib/schedule.ts      # タイムライン計算(update_schedule の仮置き)
-│   │   ├── lib/format.ts        # 日時・金額の表示
-│   │   ├── lib/categories.ts    # 場所のカテゴリ(表示名・色・アイコン)
-│   │   ├── lib/ui.ts            # アイコンサイズの定数
+│   │   ├── components/ui/       # Button / IconButton / Badge / Field / Form / SideView / SegmentedControl / InlineEdit / FactList
+│   │   ├── components/layout/   # AppShell / PageHeader
+│   │   ├── components/trip/     # TripFacts / Timeline / TripEditForm / AddPlaceForm
+│   │   ├── lib/schedule.ts      # タイムライン計算(update_schedule の仮置き)と訪問順の不変条件
+│   │   ├── lib/tripState.ts     # 旅程の reducer(追加・並び替え・削除・滞在・編集)
+│   │   ├── lib/format.ts        # 日時・金額・警告文の表示
+│   │   ├── lib/categories.ts    # 場所のカテゴリ(表示名・アイコン)
+│   │   ├── lib/ui.ts            # Size / Tone 型、アイコンサイズ、フォーカスリングの定数
 │   │   ├── types/               # 4テーブルに対応する型
 │   │   └── data/sample.ts       # backend/data/sample.json を読み込む
 │   └── vite.config.ts           # @ と @data のエイリアス

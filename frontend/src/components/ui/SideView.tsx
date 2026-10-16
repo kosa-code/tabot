@@ -1,44 +1,58 @@
 import { X } from 'lucide-react'
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 
 import { IconButton } from '@/components/ui/IconButton'
 
 type Props = {
   open: boolean
   title: string
-  description?: string
   onClose: () => void
   children: ReactNode
 }
 
-/** 右から出るサイドビュー。フォームや詳細を画面の文脈を保ったまま開く */
-export function SideView({ open, title, description, onClose, children }: Props) {
+/**
+ * 右から出るサイドビュー。ネイティブ <dialog> に乗せ、フォーカスの移動・戻し・閉じ込め、
+ * Esc、背景の無効化はブラウザに任せる。影を使うのはこの部品だけ
+ */
+export function SideView({ open, title, onClose, children }: Props) {
+  const ref = useRef<HTMLDialogElement>(null)
+  const onCloseRef = useRef(onClose)
   useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+    onCloseRef.current = onClose
+  }, [onClose])
 
-  if (!open) return null
+  useEffect(() => {
+    const dialog = ref.current
+    if (!dialog) return
+    if (open && !dialog.open) dialog.showModal()
+    if (!open && dialog.open) dialog.close()
+  }, [open])
+
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      <button type="button" aria-label="閉じる" onClick={onClose} className="absolute inset-0 animate-fade-in bg-fg-strong/30" />
-      <aside
-        role="dialog"
-        aria-modal
-        aria-label={title}
-        className="relative flex h-full w-full max-w-md animate-slide-in flex-col border-l border-neutral-200 bg-white shadow-xl"
-      >
-        <header className="flex items-start justify-between gap-3 border-b border-neutral-100 px-6 py-4">
-          <div>
-            <h2 className="text-title font-semibold text-fg-strong">{title}</h2>
-            {description && <p className="text-small text-fg-muted">{description}</p>}
-          </div>
-          <IconButton icon={X} label="閉じる" onClick={onClose} />
-        </header>
-        <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
-      </aside>
-    </div>
+    <dialog
+      ref={ref}
+      aria-label={title}
+      onCancel={(e) => {
+        e.preventDefault()
+        onCloseRef.current()
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCloseRef.current()
+      }}
+      className={[
+        // <dialog> の既定(中央・自動余白)を上書きして右端に貼る
+        'fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-lg',
+        // 閉じているときは非表示(display を上書きしないよう open: 付きで指定する)
+        'hidden open:flex flex-col bg-white p-0 text-fg shadow-xl',
+        'open:animate-slide-in motion-reduce:animate-none',
+        'backdrop:bg-fg-strong/20 backdrop:animate-fade-in motion-reduce:backdrop:animate-none',
+      ].join(' ')}
+    >
+      <header className="flex items-center justify-between gap-4 px-10 pt-10 pb-8">
+        <h2 className="text-heading text-secondary-dark">{title}</h2>
+        <IconButton icon={X} label="閉じる" size="md" onClick={onClose} />
+      </header>
+      <div className="flex flex-1 flex-col overflow-y-auto px-10 pb-10">{children}</div>
+    </dialog>
   )
 }

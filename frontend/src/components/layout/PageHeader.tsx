@@ -1,38 +1,20 @@
-import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
-
-import { ICON } from '@/lib/ui'
-
-export type PageMeta = { icon: LucideIcon; text: string }
 
 type Props = {
   title: string
-  badge?: ReactNode
-  meta?: PageMeta[]
+  /** 見出しの下の一行。アイコンは添えない */
+  meta?: string
+  /** メタ行の下に置く操作。primary は1つまで */
   actions?: ReactNode
 }
 
-/** 画面の見出し。タイトル、補足情報、右側の操作 */
-export function PageHeader({ title, badge, meta = [], actions }: Props) {
+/** 画面のヒーロー。旅行名が画面で唯一の最大文字 */
+export function PageHeader({ title, meta, actions }: Props) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3">
-      <div>
-        <div className="flex items-center gap-2">
-          <h1 className="text-heading font-semibold text-fg-strong">{title}</h1>
-          {badge}
-        </div>
-        {meta.length > 0 && (
-          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-fg-muted">
-            {meta.map(({ icon: IconComponent, text }) => (
-              <span key={text} className="flex items-center gap-1">
-                <IconComponent size={ICON.sm} />
-                {text}
-              </span>
-            ))}
-          </p>
-        )}
-      </div>
-      {actions && <div className="flex gap-2">{actions}</div>}
+    <div>
+      <h1 className="max-w-3xl text-display text-secondary-dark">{title}</h1>
+      {meta && <p className="mt-4 text-body text-fg-muted">{meta}</p>}
+      {actions && <div className="mt-8 flex items-center gap-6">{actions}</div>}
     </div>
   )
 }

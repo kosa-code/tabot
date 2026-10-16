@@ -1,146 +1,93 @@
-import { useMemo, useState } from 'react'
-
-import { Calendar, Clock, Flag, Pencil, Plus } from 'lucide-react'
+import { Pencil, Plus } from 'lucide-react'
+import { useCallback, useMemo, useReducer, useState } from 'react'
 
 import { AppShell } from '@/components/layout/AppShell'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { AddPlaceForm, type AddPlaceInput } from '@/components/trip/AddPlaceForm'
-import { BudgetCard } from '@/components/trip/BudgetCard'
-import { ItineraryCard } from '@/components/trip/ItineraryCard'
 import { Timeline } from '@/components/trip/Timeline'
+import { TripFacts } from '@/components/trip/TripFacts'
 import { TripEditForm } from '@/components/trip/TripEditForm'
-import { WarningsCard } from '@/components/trip/WarningsCard'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { Card, CardBody, CardHeader } from '@/components/ui/Card'
 import { SideView } from '@/components/ui/SideView'
 import { sampleData } from '@/data/sample'
-import { DISPLAY_TIME_ZONE, formatDate, formatTime } from '@/lib/format'
+import { DISPLAY_TIME_ZONE_LABEL, formatDateTimeLong } from '@/lib/format'
+import { timelineRowId } from '@/lib/ids'
 import { buildTimeline } from '@/lib/schedule'
-import type { Place, Trip, TripPlace } from '@/types'
+import { initTripState, tripReducer } from '@/lib/tripState'
 
 type Panel = 'none' | 'editTrip' | 'addPlace'
 
+const firstTrip = sampleData.trips[0]
+const expenses = sampleData.expenses.filter((e) => e.trip_id === firstTrip.id)
+
 // モック: バックエンド未接続のため、サンプルデータをメモリ上で編集する
 export default function App() {
-  const firstTrip = sampleData.trips[0]
-  const [trip, setTrip] = useState<Trip>(firstTrip)
-  const [places, setPlaces] = useState<Place[]>(sampleData.places)
-  const [tripPlaces, setTripPlaces] = useState<TripPlace[]>(sampleData.trip_places.filter((tp) => tp.trip_id === firstTrip.id))
+  const [state, dispatch] = useReducer(tripReducer, undefined, () => initTripState(firstTrip, sampleData.places, sampleData.trip_places))
   const [panel, setPanel] = useState<Panel>('none')
-  const expenses = sampleData.expenses.filter((e) => e.trip_id === firstTrip.id)
+  const closePanel = useCallback(() => setPanel('none'), [])
 
+  const { trip, places, tripPlaces } = state
   const items = useMemo(() => buildTimeline(trip, tripPlaces, places), [trip, tripPlaces, places])
 
-  function renumber(list: TripPlace[]): TripPlace[] {
-    return list.map((tp, i) => ({ ...tp, visit_order: i + 1 }))
-  }
-
   function handleAdd(input: AddPlaceInput) {
-    let placeId: string
     if ('existingPlaceId' in input) {
-      placeId = input.existingPlaceId
+      dispatch({ type: 'addExisting', placeId: input.existingPlaceId, stayMinutes: input.stayMinutes })
     } else {
-      const place: Place = { ...input.place, id: crypto.randomUUID(), fetched_at: new Date().toISOString() }
-      setPlaces((prev) => [...prev, place])
-      placeId = place.id
+      dispatch({ type: 'addNew', place: input.place, stayMinutes: input.stayMinutes })
     }
-    setTripPlaces((prev) =>
-      renumber([
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          trip_id: trip.id,
-          place_id: placeId,
-          visit_order: prev.length + 1,
-          stay_minutes: input.stayMinutes,
-          start_time: null,
-          end_time: null,
-        },
-      ]),
-    )
-    setPanel('none')
+    closePanel()
   }
 
-  function handleMove(tripPlaceId: string, direction: -1 | 1) {
-    setTripPlaces((prev) => {
-      const sorted = [...prev].sort((a, b) => a.visit_order - b.visit_order)
-      const index = sorted.findIndex((tp) => tp.id === tripPlaceId)
-      const target = index + direction
-      if (index < 0 || target < 0 || target >= sorted.length) return prev
-      ;[sorted[index], sorted[target]] = [sorted[target], sorted[index]]
-      return renumber(sorted)
-    })
-  }
-
-  function handleRemove(tripPlaceId: string) {
-    setTripPlaces((prev) => renumber(prev.filter((tp) => tp.id !== tripPlaceId).sort((a, b) => a.visit_order - b.visit_order)))
-  }
-
-  function handleStayChange(tripPlaceId: string, stayMinutes: number) {
-    setTripPlaces((prev) => prev.map((tp) => (tp.id === tripPlaceId ? { ...tp, stay_minutes: Math.max(0, stayMinutes) } : tp)))
+  function jumpToWarning() {
+    const first = items.find((i) => i.warnings.length > 0)
+    if (!first) return
+    document.getElementById(timelineRowId(first.tripPlace.id))?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
   const start = new Date(trip.start_at)
   const end = new Date(trip.end_at)
 
   return (
-    <AppShell crumbs={['旅程', trip.name]}>
+    <AppShell nav={[{ label: '旅程', active: true }, { label: '経費' }, { label: '設定' }]}>
       <PageHeader
         title={trip.name}
-        badge={
-          <Badge tone="primary" icon={Flag} size="md">
-            モック
-          </Badge>
-        }
-        meta={[
-          { icon: Calendar, text: `${formatDate(start)} ${formatTime(start)} 〜 ${formatDate(end)} ${formatTime(end)}` },
-          { icon: Clock, text: DISPLAY_TIME_ZONE },
-        ]}
+        meta={`${formatDateTimeLong(start)} – ${formatDateTimeLong(end, false)} · ${DISPLAY_TIME_ZONE_LABEL}`}
         actions={
           <>
-            <Button icon={Pencil} onClick={() => setPanel('editTrip')}>
-              旅行を編集
-            </Button>
             <Button variant="primary" icon={Plus} onClick={() => setPanel('addPlace')}>
               場所を追加
+            </Button>
+            <Button variant="ghost" icon={Pencil} onClick={() => setPanel('editTrip')}>
+              旅行を編集
             </Button>
           </>
         }
       />
 
-      <div className="grid gap-5 md:grid-cols-3">
-        <BudgetCard budget={trip.budget} expenses={expenses} onBudgetChange={(budget) => setTrip((t) => ({ ...t, budget }))} />
-        <ItineraryCard items={items} />
-        <WarningsCard items={items} />
-      </div>
+      <TripFacts trip={trip} items={items} expenses={expenses} onJumpToWarning={jumpToWarning} />
 
-      <Card>
-        <CardHeader
-          title="タイムライン"
-          action={
-            <Button variant="primary" size="sm" icon={Plus} onClick={() => setPanel('addPlace')}>
-              場所を追加
-            </Button>
-          }
-        />
-        <CardBody>
-          <Timeline items={items} onMove={handleMove} onRemove={handleRemove} onStayChange={handleStayChange} />
-        </CardBody>
-      </Card>
+      <Timeline
+        items={items}
+        onMove={(id, direction) => dispatch({ type: 'move', tripPlaceId: id, direction })}
+        onRemove={(id) => dispatch({ type: 'remove', tripPlaceId: id })}
+        onStayChange={(id, stayMinutes) => dispatch({ type: 'setStay', tripPlaceId: id, stayMinutes })}
+        onAdd={() => setPanel('addPlace')}
+      />
 
-      <SideView open={panel === 'editTrip'} title="旅行を編集" description="旅行名・期間・予算" onClose={() => setPanel('none')}>
+      <p className="text-caption text-fg-subtle">このデータはサンプルです。編集はこのブラウザの中だけに反映され、再読み込みで元に戻ります。</p>
+
+      <SideView open={panel === 'editTrip'} title="旅行を編集" onClose={closePanel}>
         <TripEditForm
           trip={trip}
           onSubmit={(next) => {
-            setTrip(next)
-            setPanel('none')
+            dispatch({ type: 'editTrip', trip: next })
+            closePanel()
           }}
-          onCancel={() => setPanel('none')}
+          onCancel={closePanel}
         />
       </SideView>
-      <SideView open={panel === 'addPlace'} title="場所を追加" description="タイムラインの末尾に追加する" onClose={() => setPanel('none')}>
-        <AddPlaceForm existingPlaces={places} onAdd={handleAdd} onCancel={() => setPanel('none')} />
+      <SideView open={panel === 'addPlace'} title="場所を追加" onClose={closePanel}>
+        <AddPlaceForm existingPlaces={places} onAdd={handleAdd} onCancel={closePanel} />
       </SideView>
     </AppShell>
   )

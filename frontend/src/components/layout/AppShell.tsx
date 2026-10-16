@@ -1,22 +1,45 @@
 import type { ReactNode } from 'react'
 
-import { Sidebar } from '@/components/layout/Sidebar'
-import { TopBar } from '@/components/layout/TopBar'
+import { cn } from '@/lib/cn'
+import { FOCUS_RING } from '@/lib/ui'
+
+export type NavLink = { label: string; active?: boolean }
 
 type Props = {
-  crumbs: string[]
+  nav: NavLink[]
   children: ReactNode
 }
 
-/** サイドバー + 上部バー + 本文の枠 */
-export function AppShell({ crumbs, children }: Props) {
+// ルーティング導入までは押せない。導入時に <a href> に差し替える
+function NavItem({ label, active }: NavLink) {
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar crumbs={crumbs} />
-        <main className="mx-auto w-full max-w-6xl flex-1 space-y-5 px-6 py-6">{children}</main>
-      </div>
+    <button
+      type="button"
+      aria-current={active ? 'page' : undefined}
+      className={cn(
+        'border-b pb-1 text-small transition-colors',
+        FOCUS_RING,
+        active ? 'border-secondary-dark text-secondary-dark' : 'border-transparent text-fg-muted hover:text-fg-strong',
+      )}
+    >
+      {label}
+    </button>
+  )
+}
+
+/** 一面の地に、1行の上部バーと本文。枠線や影で領域を作らない */
+export function AppShell({ nav, children }: Props) {
+  return (
+    <div className="min-h-screen">
+      <header className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6 lg:px-16">
+        <span className="text-title text-secondary-dark">tabot</span>
+        <nav aria-label="メニュー" className="flex items-center gap-6">
+          {nav.map((n) => (
+            <NavItem key={n.label} {...n} />
+          ))}
+        </nav>
+      </header>
+      <main className="mx-auto max-w-5xl space-y-12 px-6 pt-16 pb-24 lg:px-16">{children}</main>
     </div>
   )
 }

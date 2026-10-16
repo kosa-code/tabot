@@ -2,19 +2,21 @@ import type { LucideIcon } from 'lucide-react'
 import type { ButtonHTMLAttributes } from 'react'
 
 import { cn } from '@/lib/cn'
-import { ICON } from '@/lib/ui'
+import { FOCUS_RING, iconSize, type Size } from '@/lib/ui'
+
+export type IconButtonVariant = 'ghost' | 'danger'
 
 type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   icon: LucideIcon
   /** 読み上げとツールチップに使う。必須 */
   label: string
-  size?: 'sm' | 'md'
-  variant?: 'ghost' | 'danger'
+  size?: Size
+  variant?: IconButtonVariant
 }
 
-const SIZE = { sm: 'size-7', md: 'size-9' }
-const VARIANT = {
-  ghost: 'text-fg-subtle hover:bg-secondary-light/25 hover:text-fg-strong',
+const SIZE: Record<Size, string> = { sm: 'size-7', md: 'size-11' }
+const VARIANT: Record<IconButtonVariant, string> = {
+  ghost: 'text-fg-subtle hover:bg-neutral-100 hover:text-fg-strong',
   danger: 'text-fg-subtle hover:bg-red-50 hover:text-red-600',
 }
 
@@ -25,16 +27,10 @@ export function IconButton({ icon: IconComponent, label, size = 'sm', variant = 
       type={type}
       aria-label={label}
       title={label}
-      className={cn(
-        'flex items-center justify-center rounded-lg transition-colors disabled:opacity-30',
-        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
-        SIZE[size],
-        VARIANT[variant],
-        className,
-      )}
+      className={cn('flex items-center justify-center rounded-lg transition-colors disabled:opacity-30', FOCUS_RING, SIZE[size], VARIANT[variant], className)}
       {...rest}
     >
-      <IconComponent size={size === 'sm' ? ICON.sm : ICON.md} />
+      <IconComponent size={iconSize(size)} />
     </button>
   )
 }

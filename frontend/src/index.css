@@ -4,11 +4,11 @@
   デザイントークン。ルールは docs/ui.md を参照。
 
   色
-    primary   : オレンジ。CTA・進捗・警告など「今ここ」を示す
-    secondary : 紺〜水色。ロゴ、選択中、フォーカス、グラフ
+    primary   : オレンジ。画面に1つの主ボタンと、警告だけに使う
+    secondary : 紺〜水色。見出し(dark)、選択中・フォーカス・完了(DEFAULT)、淡い地(light)
     fg        : 文字色。強 → 通常 → 補助 → 淡 → 反転 のグレースケール
   文字サイズ
-    display / heading / title / body / small / caption の6段階
+    display / heading / title / body / small / caption の6段階。太さではなくサイズ・色・字間で階層を作る
 */
 @theme {
   --color-primary: #fb8500;
@@ -23,22 +23,24 @@
   --color-fg-subtle: #9ca3af;
   --color-fg-inverse: #ffffff;
 
-  --color-paper: #f4f6f8;
+  --color-paper: #ffffff;
 
-  --text-display: 28px;
-  --text-display--line-height: 32px;
-  --text-display--letter-spacing: -0.02em;
-  --text-heading: 22px;
-  --text-heading--line-height: 28px;
-  --text-heading--letter-spacing: -0.01em;
-  --text-title: 16px;
-  --text-title--line-height: 24px;
+  --text-display: 40px;
+  --text-display--line-height: 48px;
+  --text-display--letter-spacing: -0.01em;
+  --text-heading: 24px;
+  --text-heading--line-height: 32px;
+  --text-title: 18px;
+  --text-title--line-height: 28px;
   --text-body: 14px;
-  --text-body--line-height: 20px;
+  --text-body--line-height: 22px;
+  --text-body--letter-spacing: 0.01em;
   --text-small: 12px;
-  --text-small--line-height: 16px;
+  --text-small--line-height: 18px;
+  --text-small--letter-spacing: 0.02em;
   --text-caption: 11px;
-  --text-caption--line-height: 14px;
+  --text-caption--line-height: 16px;
+  --text-caption--letter-spacing: 0.04em;
 
   --animate-slide-in: slide-in 0.2s ease-out;
   --animate-fade-in: fade-in 0.2s ease-out;

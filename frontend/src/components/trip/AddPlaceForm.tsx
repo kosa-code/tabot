@@ -1,17 +1,13 @@
 import { useState, type FormEvent } from 'react'
 
-import { Button } from '@/components/ui/Button'
-import { Field, Input, Select } from '@/components/ui/Field'
+import { Field, FieldRow, Input, Select } from '@/components/ui/Field'
+import { Form, FormActions } from '@/components/ui/Form'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
-import { CATEGORIES } from '@/lib/categories'
+import { CATEGORIES, type CategoryValue } from '@/lib/categories'
+import type { NewPlace } from '@/lib/tripState'
 import type { Place } from '@/types'
 
-export type NewPlaceInput = {
-  place: Omit<Place, 'id' | 'fetched_at'>
-  stayMinutes: number
-}
-
-export type AddPlaceInput = NewPlaceInput | { existingPlaceId: string; stayMinutes: number }
+export type AddPlaceInput = { place: NewPlace; stayMinutes: number } | { existingPlaceId: string; stayMinutes: number }
 
 type Props = {
   existingPlaces: Place[]
@@ -35,7 +31,7 @@ export function AddPlaceForm({ existingPlaces, onAdd, onCancel }: Props) {
           name: String(data.get('name')),
           latitude: Number(data.get('latitude')),
           longitude: Number(data.get('longitude')),
-          category: String(data.get('category')) || null,
+          category: (String(data.get('category')) || null) as CategoryValue | null,
           opening_hours: null,
         },
         stayMinutes,
@@ -44,8 +40,9 @@ export function AddPlaceForm({ existingPlaces, onAdd, onCancel }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <Form onSubmit={handleSubmit}>
       <SegmentedControl
+        label="場所の指定方法"
         value={mode}
         onChange={setMode}
         options={[
@@ -69,14 +66,14 @@ export function AddPlaceForm({ existingPlaces, onAdd, onCancel }: Props) {
           <Field label="場所名">
             <Input name="name" placeholder="例: ヴェネツィア・サンタ・ルチア駅" required />
           </Field>
-          <div className="grid grid-cols-2 gap-3">
+          <FieldRow>
             <Field label="緯度">
               <Input name="latitude" type="number" step="any" placeholder="45.4410" required />
             </Field>
             <Field label="経度">
               <Input name="longitude" type="number" step="any" placeholder="12.3210" required />
             </Field>
-          </div>
+          </FieldRow>
           <Field label="カテゴリ">
             <Select name="category" defaultValue="sightseeing">
               {CATEGORIES.map((c) => (
@@ -89,16 +86,9 @@ export function AddPlaceForm({ existingPlaces, onAdd, onCancel }: Props) {
         </>
       )}
       <Field label="滞在時間(分)" hint="駅など通過するだけなら 0">
-        <Input name="stay_minutes" type="number" min={0} step={5} defaultValue={60} required />
+        <Input name="stay_minutes" type="number" inputMode="numeric" min={0} step={5} defaultValue={60} required />
       </Field>
-      <div className="flex justify-end gap-2 pt-1">
-        <Button variant="ghost" onClick={onCancel}>
-          キャンセル
-        </Button>
-        <Button variant="primary" type="submit">
-          末尾に追加
-        </Button>
-      </div>
-    </form>
+      <FormActions submitLabel="末尾に追加" onCancel={onCancel} />
+    </Form>
   )
 }
