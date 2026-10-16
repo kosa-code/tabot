@@ -34,7 +34,6 @@ export function BudgetCard({ budget, expenses, onBudgetChange }: Props) {
     <Card>
       <CardHeader
         title="予算"
-        subtitle="支出の合計と予算の比較"
         action={
           <span className="text-fg-subtle" title="支出は Phase 3 で登録できるようになる(今はサンプル)">
             <Info size={ICON.lg} />
