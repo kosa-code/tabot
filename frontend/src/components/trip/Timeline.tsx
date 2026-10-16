@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Clock, TriangleAlert, X, type LucideIcon } from 'lucide-react'
+import { ArrowDown, ArrowUp, Check, Clock, TriangleAlert, X, type LucideIcon } from 'lucide-react'
 import { Fragment } from 'react'
 
 import { Badge } from '@/components/ui/Badge'
@@ -47,28 +47,41 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
     return <p className="py-12 text-center text-[13px] text-neutral-500">まだ場所がありません。「場所を追加」から登録してください。</p>
   }
 
+  const last = items[items.length - 1]
+
   return (
-    <ol className="px-1">
+    // 左のレール(縦線)に沿って、日付は大きな丸、各地点は小さな丸で並べる
+    <ol className="relative ml-4 border-l-2 border-neutral-200 pl-7 py-1">
       {items.map((item, index) => {
         const prev = items[index - 1]
         const newDay = !prev || dateKey(prev.arrive) !== dateKey(item.arrive)
+        const hasWarning = item.warnings.length > 0
         return (
           <Fragment key={item.tripPlace.id}>
             {index > 0 && (
-              <li className="flex items-center gap-3 py-1 pl-14 text-[12px] text-neutral-500">
-                <span aria-hidden className="h-6 w-px bg-neutral-200" />
-                <span className="flex items-center gap-1">
-                  <Clock size={13} />
-                  移動 {formatMinutes(item.travelMinutes)}
-                </span>
+              <li className="flex items-center gap-1 py-1.5 text-[12px] text-neutral-400">
+                <Clock size={12} />
+                移動 {formatMinutes(item.travelMinutes)}
               </li>
             )}
             {newDay && (
-              <li className="pt-3 pb-1">
-                <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold text-neutral-600">{formatDate(item.arrive)}</span>
+              <li className={cn('relative', index > 0 ? 'pt-5 pb-2' : 'pb-2')}>
+                <span
+                  aria-hidden
+                  className="absolute top-1/2 -left-7 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-neutral-400 bg-white"
+                  style={{ marginTop: index > 0 ? 6 : -1 }}
+                />
+                <span className="text-[15px] font-semibold">{formatDate(item.arrive)}</span>
               </li>
             )}
-            <li className="group flex gap-3 rounded-2xl px-2 py-2.5 transition-colors hover:bg-neutral-50">
+            <li className="group relative -ml-2 flex gap-3 rounded-2xl py-2 pr-1 pl-2 transition-colors hover:bg-neutral-50">
+              <span
+                aria-hidden
+                className={cn(
+                  'absolute top-[17px] -left-5 size-3 -translate-x-1/2 rounded-full border-2 bg-white',
+                  hasWarning ? 'border-primary' : 'border-neutral-300',
+                )}
+              />
               <div className="w-12 shrink-0 pt-0.5 text-right tabular-nums">
                 <div className="text-[14px] font-semibold">{formatTime(item.arrive)}</div>
                 {item.tripPlace.stay_minutes > 0 && <div className="text-[11px] text-neutral-400">{formatTime(item.depart)}</div>}
@@ -93,7 +106,7 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
                   </label>
                   {item.place.opening_hours === null && <span>営業時間: 未登録</span>}
                 </div>
-                {item.warnings.length > 0 && (
+                {hasWarning && (
                   <ul className="mt-1.5 space-y-0.5">
                     {item.warnings.map((w) => (
                       <li key={w} className="flex items-center gap-1 text-[12px] text-primary">
@@ -113,6 +126,18 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
           </Fragment>
         )
       })}
+      <li className="relative pt-5">
+        <span
+          aria-hidden
+          className="absolute -left-7 flex size-5 -translate-x-1/2 items-center justify-center rounded-full bg-secondary text-white"
+          style={{ marginTop: 1 }}
+        >
+          <Check size={12} strokeWidth={3} />
+        </span>
+        <span className="text-[13px] text-neutral-500">
+          最終地点を出発 <span className="font-semibold text-ink tabular-nums">{formatTime(last.depart)}</span>
+        </span>
+      </li>
     </ol>
   )
 }
