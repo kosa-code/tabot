@@ -19,7 +19,7 @@ function NavItem({ label, active, size }: NavLink & { size: 'lg' | 'sm' }) {
       className={cn(
         'block rounded-lg text-left transition-colors',
         FOCUS_RING,
-        size === 'lg' ? 'text-heading' : 'text-body',
+        size === 'lg' ? 'text-title' : 'text-body',
         active ? 'text-primary' : 'text-fg-strong hover:text-fg-muted',
       )}
     >
@@ -34,7 +34,7 @@ export function AppShell({ nav, children }: Props) {
     <div className="flex min-h-screen">
       <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col px-12 pt-10 lg:flex">
         <span className="text-title text-fg-strong">tabot</span>
-        <nav aria-label="メニュー" className="mt-20 space-y-10">
+        <nav aria-label="メニュー" className="mt-20 space-y-8">
           {nav.map((n) => (
             <NavItem key={n.label} {...n} size="lg" />
           ))}
