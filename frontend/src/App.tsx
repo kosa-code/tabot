@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 
+import { Calendar, Clock, Flag, Pencil, Plus, Route } from 'lucide-react'
+
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TopBar } from '@/components/layout/TopBar'
 import { AddPlaceForm, type AddPlaceInput } from '@/components/trip/AddPlaceForm'
@@ -11,7 +13,6 @@ import { WarningsCard } from '@/components/trip/WarningsCard'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
-import { Icon } from '@/components/ui/Icon'
 import { ShellCard } from '@/components/ui/ShellCard'
 import { sampleData } from '@/data/sample'
 import { DISPLAY_TIME_ZONE, formatDate, formatTime } from '@/lib/format'
@@ -95,28 +96,28 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-[22px] font-semibold tracking-[-0.01em]">{trip.name}</h1>
-                <Badge tone="pink" icon="flag" size="md">
+                <Badge tone="primary" icon={Flag} size="md">
                   モック
                 </Badge>
               </div>
               <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-neutral-500">
                 <span className="flex items-center gap-1">
-                  <Icon name="calendar" size={14} />
+                  <Calendar size={14} />
                   {formatDate(start)} {formatTime(start)} 〜 {formatDate(end)} {formatTime(end)}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Icon name="clock" size={14} />
+                  <Clock size={14} />
                   {DISPLAY_TIME_ZONE}
                 </span>
               </p>
             </div>
             <div className="flex gap-2">
               <Button onClick={() => setDialog('editTrip')}>
-                <Icon name="pencil" size={15} />
+                <Pencil size={15} />
                 旅行を編集
               </Button>
               <Button variant="primary" onClick={() => setDialog('addPlace')}>
-                <Icon name="plus" size={15} />
+                <Plus size={15} />
                 場所を追加
               </Button>
             </div>
@@ -129,13 +130,13 @@ export default function App() {
           </div>
 
           <ShellCard
-            icon="route"
+            icon={Route}
             title="タイムライン"
             subtitle="訪問順に到着・出発時刻を計算"
             bodyClassName="p-2 sm:p-3"
             action={
               <Button variant="primary" size="sm" onClick={() => setDialog('addPlace')}>
-                <Icon name="plus" size={14} />
+                <Plus size={14} />
                 場所を追加
               </Button>
             }

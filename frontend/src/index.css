@@ -1,11 +1,19 @@
 @import "tailwindcss";
 
+/*
+  カラーパレット
+  primary   : オレンジ。CTA・進捗・現在地など「今ここ」を示す
+  secondary : 紺〜水色。本文の文字(dark)、リンクや選択中(DEFAULT)、淡い地(light)
+*/
 @theme {
-  --color-ink: #1f2328;
-  --color-paper: #f4f4f6;
-  --color-accent: #e5476a;
-  --color-accent-soft: #fde8ed;
-  --color-budget: #f0824f;
+  --color-primary: #fb8500;
+  --color-primary-light: #ffb703;
+  --color-secondary-dark: #023047;
+  --color-secondary: #219ebc;
+  --color-secondary-light: #8ecae6;
+
+  --color-ink: var(--color-secondary-dark);
+  --color-paper: #f4f6f8;
   --font-sans: "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
 }
 

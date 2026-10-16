@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react'
 
-import { Icon } from '@/components/ui/Icon'
+import { X } from 'lucide-react'
+
 
 type Props = {
   open: boolean
@@ -30,7 +31,7 @@ export function Dialog({ open, title, onClose, children }: Props) {
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-[16px] font-semibold">{title}</h2>
           <button type="button" onClick={onClose} aria-label="閉じる" className="rounded-lg p-1 text-neutral-500 hover:bg-neutral-100">
-            <Icon name="close" />
+            <X />
           </button>
         </div>
         {children}

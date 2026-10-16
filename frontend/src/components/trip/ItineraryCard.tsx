@@ -1,3 +1,5 @@
+import { Route } from 'lucide-react'
+
 import { ShellCard } from '@/components/ui/ShellCard'
 import { formatMinutes, formatTime } from '@/lib/format'
 import type { TimelineItem } from '@/lib/schedule'
@@ -9,12 +11,12 @@ export function ItineraryCard({ items }: { items: TimelineItem[] }) {
   const last = items.at(-1)
 
   const segments = [
-    { label: '移動', minutes: travel, color: 'bg-slate-400' },
-    { label: '滞在', minutes: stay, color: 'bg-violet-400' },
+    { label: '移動', minutes: travel, color: 'bg-secondary' },
+    { label: '滞在', minutes: stay, color: 'bg-secondary-light' },
   ]
 
   return (
-    <ShellCard icon="route" title="行程" subtitle="移動と滞在の内訳">
+    <ShellCard icon={Route} title="行程" subtitle="移動と滞在の内訳">
       <div className="flex h-full flex-col">
         <div className="flex items-baseline justify-between">
           <div className="text-[28px] leading-none font-semibold tracking-[-0.02em] tabular-nums">{items.length} 箇所</div>

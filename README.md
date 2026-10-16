@@ -32,7 +32,7 @@ Phase 1a(最小構成)の途中。
 
 | 分類 | 技術 |
 |---|---|
-| Frontend | React / Vite(バックエンドが動いてから着手) |
+| Frontend | React / Vite / Tailwind CSS v4 / lucide-react |
 | Backend | Python / FastAPI / SQLAlchemy / Alembic |
 | Database | PostgreSQL(ローカルにインストールして直接使う。Dockerは使わない) |
 | AI | OpenAI API(Phase 2から) |
@@ -56,7 +56,8 @@ tabot/
 ├── frontend/
 │   └── src/
 │       ├── App.tsx            # 画面全体。サンプルデータをstateとして持つ
-│       ├── components/ui/     # Button / Field / Badge / Icon / ShellCard / Dialog
+│       ├── components/ui/     # Button / Field / Badge / ShellCard / Dialog
+│       ├── index.css          # Tailwind の読み込みとカラーパレット(@theme)
 │       ├── components/layout/ # Sidebar / TopBar
 │       ├── components/trip/   # BudgetCard / ItineraryCard / WarningsCard / Timeline / 各フォーム
 │       ├── lib/schedule.ts    # タイムライン計算(update_scheduleの仮置き)
@@ -122,6 +123,20 @@ npm run dev
 ```
 
 `http://localhost:5173/` でモックが開く。データは `backend/data/sample.json` を直接読み込んでおり、画面上の編集はリロードで元に戻る。
+
+### デザイン
+
+カラーパレットは `frontend/src/index.css` の `@theme` で定義し、`bg-primary` `text-secondary-dark` のように Tailwind のクラスとして使う。
+
+| トークン | 値 | 用途 |
+|---|---|---|
+| `primary` | `#fb8500` | CTAボタン、予算の進捗バー、警告の文字など「今ここ」を示す |
+| `primary-light` | `#ffb703` | 警告アイコン、primary の淡い地 |
+| `secondary-dark` | `#023047` | 本文の文字(`ink`)、ロゴ |
+| `secondary` | `#219ebc` | カード見出しのアイコン、選択中のナビ、フォーカス、行程バー(移動) |
+| `secondary-light` | `#8ecae6` | 選択中・ホバーの淡い地、行程バー(滞在) |
+
+アイコンは [lucide-react](https://lucide.dev/) を使う。自前のSVGは持たない。
 
 タイムラインの計算(移動時間・到着時刻・営業時間チェック)は、バックエンドの update_schedule ができるまでの仮置きとして `frontend/src/lib/schedule.ts` に置いている。接続時にはAPIの結果に置き換える。
 

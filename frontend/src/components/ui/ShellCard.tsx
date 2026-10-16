@@ -1,10 +1,10 @@
+import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 
-import { Icon, type IconName } from '@/components/ui/Icon'
 import { cn } from '@/lib/cn'
 
 type Props = {
-  icon?: IconName
+  icon?: LucideIcon
   title: string
   subtitle?: string
   action?: ReactNode
@@ -14,14 +14,14 @@ type Props = {
 }
 
 /** 灰色の外枠に見出しを置き、白い内側に中身を入れるカード */
-export function ShellCard({ icon, title, subtitle, action, className, bodyClassName, children }: Props) {
+export function ShellCard({ icon: IconComponent, title, subtitle, action, className, bodyClassName, children }: Props) {
   return (
     <section className={cn('flex flex-col rounded-[22px] border border-neutral-200/70 bg-neutral-50 p-2', className)}>
       <header className="flex items-center justify-between gap-3 px-3 py-2.5">
         <div className="flex min-w-0 items-center gap-3">
-          {icon && (
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-neutral-500 shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
-              <Icon name={icon} />
+          {IconComponent && (
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-secondary shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
+              <IconComponent size={18} />
             </span>
           )}
           <div className="min-w-0">

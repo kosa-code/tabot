@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 
 const CONTROL_CLASS =
   'h-9 w-full rounded-lg border border-neutral-300 bg-white px-3 text-[14px] text-ink ' +
-  'placeholder:text-neutral-400 focus:border-accent focus:outline-2 focus:outline-accent/30'
+  'placeholder:text-neutral-400 focus:border-secondary focus:outline-2 focus:outline-secondary/30'
 
 export function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (

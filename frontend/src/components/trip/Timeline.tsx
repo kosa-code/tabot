@@ -1,7 +1,7 @@
+import { ArrowDown, ArrowUp, Clock, TriangleAlert, X, type LucideIcon } from 'lucide-react'
 import { Fragment } from 'react'
 
 import { Badge } from '@/components/ui/Badge'
-import { Icon } from '@/components/ui/Icon'
 import { findCategory } from '@/lib/categories'
 import { cn } from '@/lib/cn'
 import { dateKey, formatDate, formatMinutes, formatTime } from '@/lib/format'
@@ -24,7 +24,7 @@ function CategoryBadge({ value }: { value: string | null }) {
   )
 }
 
-function IconButton({ icon, label, disabled, danger, onClick }: { icon: 'arrowUp' | 'arrowDown' | 'close'; label: string; disabled?: boolean; danger?: boolean; onClick: () => void }) {
+function IconButton({ icon: IconComponent, label, disabled, danger, onClick }: { icon: LucideIcon; label: string; disabled?: boolean; danger?: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -34,10 +34,10 @@ function IconButton({ icon, label, disabled, danger, onClick }: { icon: 'arrowUp
       onClick={onClick}
       className={cn(
         'flex size-7 items-center justify-center rounded-lg transition-colors disabled:opacity-30',
-        danger ? 'text-neutral-400 hover:bg-red-50 hover:text-red-600' : 'text-neutral-400 hover:bg-neutral-100 hover:text-ink',
+        danger ? 'text-neutral-400 hover:bg-red-50 hover:text-red-600' : 'text-neutral-400 hover:bg-secondary-light/25 hover:text-secondary-dark',
       )}
     >
-      <Icon name={icon} size={15} />
+      <IconComponent size={15} />
     </button>
   )
 }
@@ -58,7 +58,7 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
               <li className="flex items-center gap-3 py-1 pl-14 text-[12px] text-neutral-500">
                 <span aria-hidden className="h-6 w-px bg-neutral-200" />
                 <span className="flex items-center gap-1">
-                  <Icon name="clock" size={13} />
+                  <Clock size={13} />
                   移動 {formatMinutes(item.travelMinutes)}
                 </span>
               </li>
@@ -87,7 +87,7 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
                       step={5}
                       value={item.tripPlace.stay_minutes}
                       onChange={(e) => onStayChange(item.tripPlace.id, Number(e.target.value))}
-                      className="h-6 w-16 rounded-md border border-neutral-200 bg-white px-1.5 text-right tabular-nums focus:border-accent focus:outline-none"
+                      className="h-6 w-16 rounded-md border border-neutral-200 bg-white px-1.5 text-right tabular-nums focus:border-secondary focus:outline-none"
                     />
                     分
                   </label>
@@ -96,8 +96,8 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
                 {item.warnings.length > 0 && (
                   <ul className="mt-1.5 space-y-0.5">
                     {item.warnings.map((w) => (
-                      <li key={w} className="flex items-center gap-1 text-[12px] text-amber-700">
-                        <Icon name="warning" size={13} />
+                      <li key={w} className="flex items-center gap-1 text-[12px] text-primary">
+                        <TriangleAlert size={13} />
                         {w}
                       </li>
                     ))}
@@ -105,9 +105,9 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
                 )}
               </div>
               <div className="flex shrink-0 items-start gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
-                <IconButton icon="arrowUp" label="上へ" disabled={index === 0} onClick={() => onMove(item.tripPlace.id, -1)} />
-                <IconButton icon="arrowDown" label="下へ" disabled={index === items.length - 1} onClick={() => onMove(item.tripPlace.id, 1)} />
-                <IconButton icon="close" label="削除" danger onClick={() => onRemove(item.tripPlace.id)} />
+                <IconButton icon={ArrowUp} label="上へ" disabled={index === 0} onClick={() => onMove(item.tripPlace.id, -1)} />
+                <IconButton icon={ArrowDown} label="下へ" disabled={index === items.length - 1} onClick={() => onMove(item.tripPlace.id, 1)} />
+                <IconButton icon={X} label="削除" danger onClick={() => onRemove(item.tripPlace.id)} />
               </div>
             </li>
           </Fragment>

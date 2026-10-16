@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from 'react'
 
+import { Check, Info, Pencil, X } from 'lucide-react'
+
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Field'
-import { Icon } from '@/components/ui/Icon'
 import { ShellCard } from '@/components/ui/ShellCard'
 import { formatYen } from '@/lib/format'
 import type { Expense } from '@/types'
@@ -34,7 +35,7 @@ export function BudgetCard({ budget, expenses, onBudgetChange }: Props) {
       title="予算"
       action={
         <span className="text-neutral-400" title="支出の合計と予算の比較。支出は Phase 3 で登録できるようになる(今はサンプル)">
-          <Icon name="info" />
+          <Info />
         </span>
       }
     >
@@ -56,7 +57,7 @@ export function BudgetCard({ budget, expenses, onBudgetChange }: Props) {
 
         <div className="mt-5 flex h-7 gap-1.5" role="progressbar" aria-valuenow={Math.round(ratio * 100)} aria-valuemin={0} aria-valuemax={100}>
           <div
-            className={`rounded-lg bg-budget transition-[flex-basis] ${HATCH}`}
+            className={`rounded-lg bg-primary transition-[flex-basis] ${HATCH}`}
             style={{ flexBasis: `${ratio * 100}%` }}
           />
           {ratio < 1 && <div className="flex-1 rounded-lg bg-neutral-100" />}
@@ -64,23 +65,23 @@ export function BudgetCard({ budget, expenses, onBudgetChange }: Props) {
 
         <div className="mt-auto flex items-center justify-between pt-5 text-[13px]">
           <span className="flex shrink-0 items-center gap-2 whitespace-nowrap">
-            <span className="size-2.5 rounded-full bg-budget ring-2 ring-budget/30" />
+            <span className="size-2.5 rounded-full bg-primary ring-2 ring-primary/30" />
             予算
           </span>
           {editing ? (
             <form onSubmit={handleSubmit} className="flex items-center gap-1.5">
               <Input name="budget" type="number" min={0} step={1000} defaultValue={budget ?? ''} className="h-7 w-24 px-2 text-right" autoFocus />
               <Button size="sm" variant="primary" type="submit" aria-label="保存">
-                <Icon name="check" size={14} />
+                <Check size={14} />
               </Button>
               <Button size="sm" variant="ghost" onClick={() => setEditing(false)} aria-label="キャンセル">
-                <Icon name="close" size={14} />
+                <X size={14} />
               </Button>
             </form>
           ) : (
             <button type="button" onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-neutral-500 hover:text-ink">
               <span className="tabular-nums">{formatYen(budget)}</span>
-              <Icon name="pencil" size={15} />
+              <Pencil size={15} />
             </button>
           )}
         </div>
