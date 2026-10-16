@@ -1,8 +1,8 @@
 import { Fragment } from 'react'
 
-import { CATEGORIES } from '@/components/trip/AddPlaceForm'
 import { Badge } from '@/components/ui/Badge'
 import { Icon } from '@/components/ui/Icon'
+import { findCategory } from '@/lib/categories'
 import { cn } from '@/lib/cn'
 import { dateKey, formatDate, formatMinutes, formatTime } from '@/lib/format'
 import type { TimelineItem } from '@/lib/schedule'
@@ -14,8 +14,14 @@ type Props = {
   onStayChange: (tripPlaceId: string, stayMinutes: number) => void
 }
 
-function categoryLabel(value: string | null): string | null {
-  return CATEGORIES.find((c) => c.value === value)?.label ?? value
+function CategoryBadge({ value }: { value: string | null }) {
+  const c = findCategory(value)
+  if (!c) return null
+  return (
+    <Badge tone={c.tone} icon={c.icon} size="md">
+      {c.label}
+    </Badge>
+  )
 }
 
 function IconButton({ icon, label, disabled, danger, onClick }: { icon: 'arrowUp' | 'arrowDown' | 'close'; label: string; disabled?: boolean; danger?: boolean; onClick: () => void }) {
@@ -70,7 +76,7 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-[14px] font-medium">{item.place.name}</span>
-                  {item.place.category && <Badge>{categoryLabel(item.place.category)}</Badge>}
+                  <CategoryBadge value={item.place.category} />
                 </div>
                 <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-neutral-500">
                   <label className="flex items-center gap-1">

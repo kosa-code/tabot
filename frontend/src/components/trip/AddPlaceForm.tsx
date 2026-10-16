@@ -2,16 +2,9 @@ import { useState, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui/Button'
 import { Field, Input, Select } from '@/components/ui/Field'
+import { CATEGORIES } from '@/lib/categories'
 import { cn } from '@/lib/cn'
 import type { Place } from '@/types'
-
-export const CATEGORIES = [
-  { value: 'sightseeing', label: '観光' },
-  { value: 'museum', label: '美術館・博物館' },
-  { value: 'restaurant', label: '飲食' },
-  { value: 'station', label: '駅・空港' },
-  { value: 'hotel', label: '宿' },
-] as const
 
 export type NewPlaceInput = {
   place: Omit<Place, 'id' | 'fetched_at'>

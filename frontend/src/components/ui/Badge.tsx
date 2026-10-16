@@ -1,18 +1,41 @@
 import type { ReactNode } from 'react'
 
+import { SolidIcon, type SolidIconName } from '@/components/ui/SolidIcon'
 import { cn } from '@/lib/cn'
 
-type Tone = 'neutral' | 'accent' | 'warning'
+export type BadgeTone = 'neutral' | 'mint' | 'sky' | 'pink' | 'brown' | 'orange' | 'amber'
 
-const TONE: Record<Tone, string> = {
-  neutral: 'bg-neutral-100 text-neutral-700',
-  accent: 'bg-accent-soft text-accent',
-  warning: 'bg-amber-50 text-amber-800',
+// 淡い地 + 同系色の文字。アイコンは文字より少し濃くする
+const TONE: Record<BadgeTone, { pill: string; icon: string }> = {
+  neutral: { pill: 'bg-neutral-100 text-neutral-700', icon: 'text-neutral-500' },
+  mint: { pill: 'bg-emerald-50 text-emerald-700', icon: 'text-emerald-500' },
+  sky: { pill: 'bg-cyan-50 text-cyan-800', icon: 'text-cyan-600' },
+  pink: { pill: 'bg-pink-50 text-pink-600', icon: 'text-pink-500' },
+  brown: { pill: 'bg-stone-100 text-amber-900', icon: 'text-amber-800' },
+  orange: { pill: 'bg-orange-50 text-orange-600', icon: 'text-orange-500' },
+  amber: { pill: 'bg-amber-50 text-amber-800', icon: 'text-amber-500' },
 }
 
-export function Badge({ tone = 'neutral', children }: { tone?: Tone; children: ReactNode }) {
+type Props = {
+  tone?: BadgeTone
+  icon?: SolidIconName
+  size?: 'sm' | 'md'
+  className?: string
+  children: ReactNode
+}
+
+export function Badge({ tone = 'neutral', icon, size = 'sm', className, children }: Props) {
+  const t = TONE[tone]
   return (
-    <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium', TONE[tone])}>
+    <span
+      className={cn(
+        'inline-flex items-center rounded-full font-medium whitespace-nowrap',
+        size === 'sm' ? 'gap-1 px-2 py-0.5 text-[11px]' : 'gap-1.5 px-2.5 py-1 text-[12px]',
+        t.pill,
+        className,
+      )}
+    >
+      {icon && <SolidIcon name={icon} size={size === 'sm' ? 12 : 14} className={t.icon} />}
       {children}
     </span>
   )

@@ -95,7 +95,9 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-[22px] font-semibold tracking-[-0.01em]">{trip.name}</h1>
-                <Badge tone="accent">モック</Badge>
+                <Badge tone="pink" icon="flag" size="md">
+                  モック
+                </Badge>
               </div>
               <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-neutral-500">
                 <span className="flex items-center gap-1">
