@@ -45,7 +45,7 @@ export function AddPlaceForm({ existingPlaces, onAdd, onCancel }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <div className="flex rounded-xl bg-neutral-100 p-0.5 text-[12px]">
+      <div className="flex rounded-xl bg-neutral-100 p-0.5 text-small">
         {(
           [
             ['existing', '登録済みから選ぶ'],
@@ -57,8 +57,8 @@ export function AddPlaceForm({ existingPlaces, onAdd, onCancel }: Props) {
             type="button"
             onClick={() => setMode(value)}
             className={cn(
-              'flex-1 rounded-[10px] px-2.5 py-1.5',
-              mode === value ? 'bg-white font-medium shadow-sm' : 'text-neutral-500 hover:text-ink',
+              'flex-1 rounded-[10px] px-3 py-2',
+              mode === value ? 'bg-white font-medium shadow-sm' : 'text-fg-muted hover:text-fg-strong',
             )}
           >
             {label}

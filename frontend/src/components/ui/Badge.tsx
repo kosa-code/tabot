@@ -7,7 +7,7 @@ export type BadgeTone = 'neutral' | 'primary' | 'secondary' | 'mint' | 'sky' | '
 
 // 淡い地 + 同系色の文字。アイコンは文字より少し濃くする
 const TONE: Record<BadgeTone, { pill: string; icon: string }> = {
-  neutral: { pill: 'bg-neutral-100 text-neutral-700', icon: 'text-neutral-500' },
+  neutral: { pill: 'bg-neutral-100 text-fg', icon: 'text-fg-muted' },
   primary: { pill: 'bg-primary-light/20 text-primary', icon: 'text-primary' },
   secondary: { pill: 'bg-secondary-light/30 text-secondary-dark', icon: 'text-secondary' },
   mint: { pill: 'bg-emerald-50 text-emerald-700', icon: 'text-emerald-500' },
@@ -30,7 +30,7 @@ export function Badge({ tone = 'neutral', icon: IconComponent, size = 'sm', clas
     <span
       className={cn(
         'inline-flex items-center rounded-full font-medium whitespace-nowrap',
-        size === 'sm' ? 'gap-1 px-2 py-0.5 text-[11px]' : 'gap-1.5 px-2.5 py-1 text-[12px]',
+        size === 'sm' ? 'gap-1 px-2 py-0.5 text-caption' : 'gap-2 px-3 py-1 text-small',
         t.pill,
         className,
       )}

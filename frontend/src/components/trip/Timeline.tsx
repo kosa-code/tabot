@@ -4,6 +4,7 @@ import { Fragment } from 'react'
 import { Badge } from '@/components/ui/Badge'
 import { findCategory } from '@/lib/categories'
 import { cn } from '@/lib/cn'
+import { ICON } from '@/lib/ui'
 import { dateKey, formatDate, formatMinutes, formatTime } from '@/lib/format'
 import type { TimelineItem } from '@/lib/schedule'
 
@@ -34,17 +35,17 @@ function IconButton({ icon: IconComponent, label, disabled, danger, onClick }: {
       onClick={onClick}
       className={cn(
         'flex size-7 items-center justify-center rounded-lg transition-colors disabled:opacity-30',
-        danger ? 'text-neutral-400 hover:bg-red-50 hover:text-red-600' : 'text-neutral-400 hover:bg-secondary-light/25 hover:text-secondary-dark',
+        danger ? 'text-fg-subtle hover:bg-red-50 hover:text-red-600' : 'text-fg-subtle hover:bg-secondary-light/25 hover:text-secondary-dark',
       )}
     >
-      <IconComponent size={15} />
+      <IconComponent size={ICON.md} />
     </button>
   )
 }
 
 export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
   if (items.length === 0) {
-    return <p className="py-12 text-center text-[13px] text-neutral-500">まだ場所がありません。「場所を追加」から登録してください。</p>
+    return <p className="py-12 text-center text-small text-fg-muted">まだ場所がありません。「場所を追加」から登録してください。</p>
   }
 
   const last = items[items.length - 1]
@@ -59,8 +60,8 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
         return (
           <Fragment key={item.tripPlace.id}>
             {index > 0 && (
-              <li className="flex items-center gap-1 py-1.5 text-[12px] text-neutral-400">
-                <Clock size={12} />
+              <li className="flex items-center gap-1 py-2 text-small text-fg-subtle">
+                <Clock size={ICON.xs} />
                 移動 {formatMinutes(item.travelMinutes)}
               </li>
             )}
@@ -71,7 +72,7 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
                   className="absolute top-1/2 -left-7 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-neutral-400 bg-white"
                   style={{ marginTop: index > 0 ? 6 : -1 }}
                 />
-                <span className="text-[15px] font-semibold">{formatDate(item.arrive)}</span>
+                <span className="text-title font-semibold text-fg-strong">{formatDate(item.arrive)}</span>
               </li>
             )}
             <li className="group relative -ml-2 flex gap-3 rounded-2xl py-2 pr-1 pl-2 transition-colors hover:bg-neutral-50">
@@ -82,16 +83,16 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
                   hasWarning ? 'border-primary' : 'border-neutral-300',
                 )}
               />
-              <div className="w-12 shrink-0 pt-0.5 text-right tabular-nums">
-                <div className="text-[14px] font-semibold">{formatTime(item.arrive)}</div>
-                {item.tripPlace.stay_minutes > 0 && <div className="text-[11px] text-neutral-400">{formatTime(item.depart)}</div>}
+              <div className="w-12 shrink-0 pt-1 text-right tabular-nums">
+                <div className="text-body font-semibold text-fg-strong">{formatTime(item.arrive)}</div>
+                {item.tripPlace.stay_minutes > 0 && <div className="text-caption text-fg-subtle">{formatTime(item.depart)}</div>}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[14px] font-medium">{item.place.name}</span>
+                  <span className="text-body font-medium text-fg-strong">{item.place.name}</span>
                   <CategoryBadge value={item.place.category} />
                 </div>
-                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-neutral-500">
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-fg-muted">
                   <label className="flex items-center gap-1">
                     滞在
                     <input
@@ -100,17 +101,17 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
                       step={5}
                       value={item.tripPlace.stay_minutes}
                       onChange={(e) => onStayChange(item.tripPlace.id, Number(e.target.value))}
-                      className="h-6 w-16 rounded-md border border-neutral-200 bg-white px-1.5 text-right tabular-nums focus:border-secondary focus:outline-none"
+                      className="h-6 w-16 rounded-md border border-neutral-200 bg-white px-2 text-right tabular-nums focus:border-secondary focus:outline-none"
                     />
                     分
                   </label>
                   {item.place.opening_hours === null && <span>営業時間: 未登録</span>}
                 </div>
                 {hasWarning && (
-                  <ul className="mt-1.5 space-y-0.5">
+                  <ul className="mt-2 space-y-1">
                     {item.warnings.map((w) => (
-                      <li key={w} className="flex items-center gap-1 text-[12px] text-primary">
-                        <TriangleAlert size={13} />
+                      <li key={w} className="flex items-center gap-1 text-small text-primary">
+                        <TriangleAlert size={ICON.sm} />
                         {w}
                       </li>
                     ))}
@@ -129,13 +130,13 @@ export function Timeline({ items, onMove, onRemove, onStayChange }: Props) {
       <li className="relative pt-5">
         <span
           aria-hidden
-          className="absolute -left-7 flex size-5 -translate-x-1/2 items-center justify-center rounded-full bg-secondary text-white"
+          className="absolute -left-7 flex size-5 -translate-x-1/2 items-center justify-center rounded-full bg-secondary text-fg-inverse"
           style={{ marginTop: 1 }}
         >
-          <Check size={12} strokeWidth={3} />
+          <Check size={ICON.xs} strokeWidth={3} />
         </span>
-        <span className="text-[13px] text-neutral-500">
-          最終地点を出発 <span className="font-semibold text-ink tabular-nums">{formatTime(last.depart)}</span>
+        <span className="text-small text-fg-muted">
+          最終地点を出発 <span className="font-semibold text-fg-strong tabular-nums">{formatTime(last.depart)}</span>
         </span>
       </li>
     </ol>

@@ -2,6 +2,7 @@ import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import { cn } from '@/lib/cn'
+import { ICON } from '@/lib/ui'
 
 type Props = {
   icon?: LucideIcon
@@ -17,16 +18,16 @@ type Props = {
 export function ShellCard({ icon: IconComponent, title, subtitle, action, className, bodyClassName, children }: Props) {
   return (
     <section className={cn('flex flex-col rounded-[22px] border border-neutral-200/70 bg-neutral-50 p-2', className)}>
-      <header className="flex items-center justify-between gap-3 px-3 py-2.5">
+      <header className="flex items-center justify-between gap-3 px-3 py-2">
         <div className="flex min-w-0 items-center gap-3">
           {IconComponent && (
             <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-secondary shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
-              <IconComponent size={18} />
+              <IconComponent size={ICON.lg} />
             </span>
           )}
           <div className="min-w-0">
-            <h2 className="truncate text-[16px] font-semibold">{title}</h2>
-            {subtitle && <p className="truncate text-[12px] text-neutral-500">{subtitle}</p>}
+            <h2 className="truncate text-title font-semibold text-fg-strong">{title}</h2>
+            {subtitle && <p className="truncate text-small text-fg-muted">{subtitle}</p>}
           </div>
         </div>
         {action && <div className="shrink-0">{action}</div>}

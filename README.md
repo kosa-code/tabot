@@ -13,6 +13,7 @@ AIは「何をしたいか」を理解し、時間・距離・金額の計算と
 | [docs/design.md](docs/design.md) | 設計書。背景・提供価値・フェーズ・DB設計・機能仕様・開発手順 |
 | [docs/value-hypothesis.md](docs/value-hypothesis.md) | 価値仮説シート。対象者・課題・提供価値 |
 | [docs/value-proposition-canvas.md](docs/value-proposition-canvas.md) | Value Proposition Canvas |
+| [docs/ui.md](docs/ui.md) | UI のルール。色・文字サイズ・余白・アイコン |
 
 ## 現在の状態
 
@@ -126,19 +127,7 @@ npm run dev
 
 ### デザイン
 
-カラーパレットは `frontend/src/index.css` の `@theme` で定義し、`bg-primary` `text-secondary-dark` のように Tailwind のクラスとして使う。
-
-| トークン | 値 | 用途 |
-|---|---|---|
-| `primary` | `#fb8500` | CTAボタン、予算の進捗バー、警告の文字など「今ここ」を示す |
-| `primary-light` | `#ffb703` | 警告アイコン、primary の淡い地 |
-| `secondary-dark` | `#023047` | 本文の文字(`ink`)、ロゴ |
-| `secondary` | `#219ebc` | カード見出しのアイコン、選択中のナビ、フォーカス、行程バー(移動) |
-| `secondary-light` | `#8ecae6` | 選択中・ホバーの淡い地、行程バー(滞在) |
-
-フォントは游ゴシック(OS同梱。macOS は 游ゴシック体、Windows は Yu Gothic Medium を優先)を使い、無い環境では Noto Sans JP にフォールバックする。数字は `tabular-nums` で桁を揃える。
-
-アイコンは [lucide-react](https://lucide.dev/) を使う。自前のSVGは持たない。
+色・文字サイズ・余白・アイコンのルールは [docs/ui.md](docs/ui.md) にまとめている。値の正は `frontend/src/index.css` の `@theme` と `frontend/src/lib/ui.ts`。
 
 タイムラインの計算(移動時間・到着時刻・営業時間チェック)は、バックエンドの update_schedule ができるまでの仮置きとして `frontend/src/lib/schedule.ts` に置いている。接続時にはAPIの結果に置き換える。
 

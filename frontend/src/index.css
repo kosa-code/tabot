@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
 /*
-  カラーパレット
-  primary   : オレンジ。CTA・進捗・現在地など「今ここ」を示す
-  secondary : 紺〜水色。本文の文字(dark)、リンクや選択中(DEFAULT)、淡い地(light)
+  デザイントークン。ルールは docs/ui.md を参照。
+
+  色
+    primary   : オレンジ。CTA・進捗・警告など「今ここ」を示す
+    secondary : 紺〜水色。ロゴ、選択中、フォーカス、グラフ
+    fg        : 文字色。強 → 通常 → 補助 → 淡 → 反転 のグレースケール
+  文字サイズ
+    display / heading / title / body / small / caption の6段階
 */
 @theme {
   --color-primary: #fb8500;
@@ -12,13 +17,34 @@
   --color-secondary: #219ebc;
   --color-secondary-light: #8ecae6;
 
-  --color-ink: var(--color-secondary-dark);
+  --color-fg-strong: #15181d;
+  --color-fg: #343a40;
+  --color-fg-muted: #6b7280;
+  --color-fg-subtle: #9ca3af;
+  --color-fg-inverse: #ffffff;
+
   --color-paper: #f4f6f8;
+
+  --text-display: 28px;
+  --text-display--line-height: 32px;
+  --text-display--letter-spacing: -0.02em;
+  --text-heading: 22px;
+  --text-heading--line-height: 28px;
+  --text-heading--letter-spacing: -0.01em;
+  --text-title: 16px;
+  --text-title--line-height: 24px;
+  --text-body: 14px;
+  --text-body--line-height: 20px;
+  --text-small: 12px;
+  --text-small--line-height: 16px;
+  --text-caption: 11px;
+  --text-caption--line-height: 14px;
+
   --font-sans: "游ゴシック体", "YuGothic", "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック", "Yu Gothic", "Noto Sans JP", sans-serif;
 }
 
 @layer base {
   html {
-    @apply bg-paper font-sans text-[14px] text-ink;
+    @apply bg-paper font-sans text-body text-fg;
   }
 }

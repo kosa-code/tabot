@@ -18,6 +18,7 @@ import { sampleData } from '@/data/sample'
 import { DISPLAY_TIME_ZONE, formatDate, formatTime } from '@/lib/format'
 import { buildTimeline } from '@/lib/schedule'
 import type { Place, Trip, TripPlace } from '@/types'
+import { ICON } from '@/lib/ui'
 
 type DialogKind = 'none' | 'editTrip' | 'addPlace'
 
@@ -95,29 +96,29 @@ export default function App() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-[22px] font-semibold tracking-[-0.01em]">{trip.name}</h1>
+                <h1 className="text-heading font-semibold text-fg-strong">{trip.name}</h1>
                 <Badge tone="primary" icon={Flag} size="md">
                   モック
                 </Badge>
               </div>
-              <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-neutral-500">
+              <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-fg-muted">
                 <span className="flex items-center gap-1">
-                  <Calendar size={14} />
+                  <Calendar size={ICON.sm} />
                   {formatDate(start)} {formatTime(start)} 〜 {formatDate(end)} {formatTime(end)}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Clock size={14} />
+                  <Clock size={ICON.sm} />
                   {DISPLAY_TIME_ZONE}
                 </span>
               </p>
             </div>
             <div className="flex gap-2">
               <Button onClick={() => setDialog('editTrip')}>
-                <Pencil size={15} />
+                <Pencil size={ICON.md} />
                 旅行を編集
               </Button>
               <Button variant="primary" onClick={() => setDialog('addPlace')}>
-                <Plus size={15} />
+                <Plus size={ICON.md} />
                 場所を追加
               </Button>
             </div>
@@ -136,7 +137,7 @@ export default function App() {
             bodyClassName="p-2 sm:p-3"
             action={
               <Button variant="primary" size="sm" onClick={() => setDialog('addPlace')}>
-                <Plus size={14} />
+                <Plus size={ICON.sm} />
                 場所を追加
               </Button>
             }

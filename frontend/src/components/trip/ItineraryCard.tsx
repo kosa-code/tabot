@@ -19,8 +19,8 @@ export function ItineraryCard({ items }: { items: TimelineItem[] }) {
     <ShellCard icon={Route} title="行程" subtitle="移動と滞在の内訳">
       <div className="flex h-full flex-col">
         <div className="flex items-baseline justify-between">
-          <div className="text-[28px] leading-none font-semibold tracking-[-0.02em] tabular-nums">{items.length} 箇所</div>
-          <div className="text-[12px] text-neutral-500">合計 {formatMinutes(total)}</div>
+          <div className="text-display font-semibold text-fg-strong tabular-nums">{items.length} 箇所</div>
+          <div className="text-small text-fg-muted">合計 {formatMinutes(total)}</div>
         </div>
 
         <div className="mt-5 flex h-3 gap-1">
@@ -29,10 +29,10 @@ export function ItineraryCard({ items }: { items: TimelineItem[] }) {
           ))}
         </div>
 
-        <ul className="mt-4 space-y-2 text-[13px]">
+        <ul className="mt-4 space-y-2 text-small">
           {segments.map((s) => (
             <li key={s.label} className="flex items-center justify-between">
-              <span className="flex items-center gap-2 text-neutral-500">
+              <span className="flex items-center gap-2 text-fg-muted">
                 <span className={`size-2.5 rounded-full ${s.color}`} />
                 {s.label}
               </span>
@@ -40,7 +40,7 @@ export function ItineraryCard({ items }: { items: TimelineItem[] }) {
             </li>
           ))}
           <li className="flex items-center justify-between border-t border-neutral-100 pt-2">
-            <span className="text-neutral-500">最終地点を出る</span>
+            <span className="text-fg-muted">最終地点を出る</span>
             <span className="font-medium tabular-nums">{last ? formatTime(last.depart) : '—'}</span>
           </li>
         </ul>
