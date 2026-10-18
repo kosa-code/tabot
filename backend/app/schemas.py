@@ -20,3 +20,10 @@ class TripRead(BaseModel):
     start_at: datetime
     end_at: datetime
     budget: int | None
+
+
+class TripUpdate(BaseModel):
+    name: str | None = None
+    start_at: datetime | None = None
+    end_at: datetime | None = None
+    budget: int | None = None
