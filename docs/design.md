@@ -1,7 +1,7 @@
 # tabot 設計書
 
-Version: 1.2
-更新日: 2026-09-07
+Version: 1.3
+更新日: 2026-10-21
 
 ---
 
@@ -59,135 +59,13 @@ AIが担当:
 
 ## 技術スタック
 
-| 分類 | 技術 | 備考 |
-|---|---|---|
-| Frontend | React / Vite | Next.jsは採用しない。サーバー側描画・SEOが不要で、概念が増える分だけ不利なため |
-| Backend | Python / FastAPI | |
-| Database | PostgreSQL | 開発初期から本番までPostgres。移行作業を発生させない。開発中はWindowsにインストールしたPostgresを直接使う(Dockerは使わない)。アクセスはORM(SQLAlchemy)経由 |
-| AI | OpenAI API | Phase 2から |
-| 移動時間計算 | 直線距離×係数(仮実装) | OSMnx / Routing APIは必要になってから |
-| Version Control | Git / GitHub | |
-| 開発 | CLI Coding Agent | |
-| コンテナ | Docker | 後回し。デプロイ前に導入 |
-| Deploy | AWS | Phase 3 |
+[README.md](../README.md) を参照。
 
 ---
 
 ## データベース設計
 
-PostgreSQLの型をそのまま使う。以下の表記は下記に対応する。
-
-| 表記 | PostgreSQLの型 | 備考 |
-|---|---|---|
-| UUID | `uuid` | 生成はアプリ側(`uuid4`)で行う |
-| JSON | `jsonb` | 検索・部分更新ができる |
-| TIMESTAMP | `timestamptz` | UTCで保存し、表示時にJSTへ変換 |
-
-Migrationツールは Alembic を使う。
-
-NULL許可は以下のみ。それ以外はNOT NULLとする。
-
-| 列 | 理由 |
-|---|---|
-| trips.budget | 予算を決めずに作り始められる |
-| trip_places.start_time / end_time | update_scheduleが計算するまで空 |
-| places.opening_hours | 手入力なので不明な場合がある |
-| places.category | 同上 |
-
-trip_places.stay_minutesはNOT NULL(既定0)。空だと移動時間の計算ができないため。
-
-### users
-
-| カラム | 型 | 説明 |
-|---|---|---|
-| id | UUID | ユーザーID |
-| name | VARCHAR | 名前 |
-| email | VARCHAR | メールアドレス |
-| created_at | TIMESTAMP | 作成日時 |
-
-### trips
-
-| カラム | 型 | 説明 |
-|---|---|---|
-| id | UUID | 旅行ID |
-| user_id | UUID | 作成者 |
-| name | VARCHAR | 旅行名 |
-| start_at | TIMESTAMP | 開始日時 |
-| end_at | TIMESTAMP | 終了日時 |
-| budget | INTEGER | 予算 |
-
-### places
-
-| カラム | 型 | 説明 |
-|---|---|---|
-| id | UUID | 場所ID |
-| name | VARCHAR | 場所名 |
-| latitude | DOUBLE | 緯度 |
-| longitude | DOUBLE | 経度 |
-| category | VARCHAR | カテゴリ |
-| opening_hours | JSON | 営業時間 |
-| fetched_at | TIMESTAMP | この場所情報を取得した日時 |
-
-placesは人間が育てるマスタではなく、選択された場所のスナップショット置き場とする。緯度経度・営業時間といった客観的事実だけを持ち、全ユーザーで共有する。
-
-Phase 1では外部APIが無いため手入力。Phase 2以降はsearch_placesの結果から自動で入る。外部APIを導入する際にsource / external_id列を追加し、重複登録の防止と更新に使う(今は追加しない)。
-
-営業時間や所在地は現実側が変わるため、placesは更新されうる。ただし過去の旅程が組まれた時点の営業時間までは保存しない(Phase 1では過剰)。代わりにfetched_atを持ち、「営業時間(2026-09-17時点)」のように鮮度を表示してユーザーが判断できるようにする。
-
-閉店した場所もレコードは削除しない。trip_placesが参照しており、削除すると過去の旅程が壊れるため。閉店を表現する必要が出たらフラグ列を追加する。
-
-移動時間の計算はプラン変更のたびに走るため、緯度経度は手元に保持する必要がある。また旅行プランは「そのとき何を選んだか」の記録なので、外部APIから場所が消えても記録が壊れないようにする。
-
-### trip_places
-
-| カラム | 型 | 説明 |
-|---|---|---|
-| id | UUID | 旅程ID |
-| trip_id | UUID | 旅行ID |
-| place_id | UUID | 場所ID |
-| visit_order | INTEGER | 訪問順 |
-| stay_minutes | INTEGER | 滞在時間 |
-| start_time | TIMESTAMP | 開始時刻 |
-| end_time | TIMESTAMP | 終了時刻 |
-
-外部キー削除時の動作は以下とする。
-
-| 操作 | 動作 | 理由 |
-|---|---|---|
-| trips削除 | CASCADE | 旅行を消せば旅程も不要 |
-| places削除 | RESTRICT | 使用中の場所を消すと旅程が壊れる |
-| users削除 | RESTRICT | 旅行を持つユーザーを消すと旅行が孤児になる |
-
-主キーはidとする。trip_id + place_idの複合キーにすると、同じ旅行で同じ場所を2回訪問できない(出発と帰りに同じ駅を通る等)。
-
-旅程の削除・並び替えはplace_idではなくtrip_placesのidで指定する。同じ場所が旅程に2回あると、place_idではどちらか区別できないため。
-
-visit_orderは常に1から始まる連番とする。追加は末尾(最大値+1)に入れ、途中への挿入は並び替えで行う。削除時は後ろを詰める。
-
-stay_minutesはplacesではなくここに持つ。滞在時間は場所の客観的属性ではなく「その旅行で何分いるつもりか」という主観的な予定であり、旅行ごと・ユーザーごとに異なるため。
-
-start_time / end_time はTIMESTAMP(日時)で持つ。日をまたぐ旅行にそのまま対応できる。値はupdate_scheduleが計算して埋める。
-
-以下2テーブルはPhase 3で作成する。Phase 1では作らない。
-
-理由: Phase 3の入力項目にある「割り勘方法」「端数処理」を入れる列が下の定義に無く、均等割り以外を表現できない。expense_participantsにも負担額・比率の列が要る。現状の定義のまま作るとPhase 3で必ずALTER TABLEすることになるため、要件が固まってから設計し直す。
-
-### expenses
-
-| カラム | 型 | 説明 |
-|---|---|---|
-| id | UUID | 支出ID |
-| trip_id | UUID | 旅行ID |
-| payer_id | UUID | 支払った人 |
-| amount | INTEGER | 金額 |
-| description | VARCHAR | 内容 |
-
-### expense_participants
-
-| カラム | 型 | 説明 |
-|---|---|---|
-| expense_id | UUID | 支出ID |
-| user_id | UUID | 負担者 |
+[database.md](database.md) を参照。
 
 ---
 
@@ -303,15 +181,9 @@ AIによるプラン変更は、変更前後の差分と変更理由を表示す
 
 ---
 
-## update_scheduleの仕様
+## 時刻計算・制約チェック
 
-Phase 1では以下の割り切りとする。
-
-- 訪問順(visit_order)は変えない
-- 旅行の開始時刻から、移動時間と滞在時間を前から順に足してstart_time / end_timeを埋める
-- 制約違反(営業時間外、終了時刻超過)は警告表示のみ。自動修正・並び替え最適化はしない
-
-順序最適化(移動を少なくする等)はPhase 2以降で検討する。
+[scheduling.md](scheduling.md) を参照。
 
 ---
 
@@ -329,13 +201,9 @@ Phase 1では以下の割り切りとする。
 10. テスト
 11. Docker化・AWSデプロイ
 
-### CLI Coding Agentとの分担
+### AIコーディングエージェントとの分担
 
-人間が決める: 目的 / 要件 / DB設計 / 責務分担 / Tool仕様 / 計算ルール / テスト方針
-
-Agentに任せる: コード実装 / テストコード / リファクタリング / エラー修正 / ドキュメント
-
-フロー: 設計 → Agentに実装方針を確認 → 人間が承認 → Agentが実装 → テスト → 人間がレビュー
+[AGENTS.md](../AGENTS.md) を参照。
 
 ---
 
