@@ -160,6 +160,10 @@ Phase 1では外部APIが無いため手入力。Phase 2以降はsearch_places�
 
 主キーはidとする。trip_id + place_idの複合キーにすると、同じ旅行で同じ場所を2回訪問できない(出発と帰りに同じ駅を通る等)。
 
+旅程の削除・並び替えはplace_idではなくtrip_placesのidで指定する。同じ場所が旅程に2回あると、place_idではどちらか区別できないため。
+
+visit_orderは常に1から始まる連番とする。追加は末尾(最大値+1)に入れ、途中への挿入は並び替えで行う。削除時は後ろを詰める。
+
 stay_minutesはplacesではなくここに持つ。滞在時間は場所の客観的属性ではなく「その旅行で何分いるつもりか」という主観的な予定であり、旅行ごと・ユーザーごとに異なるため。
 
 start_time / end_time はTIMESTAMP(日時)で持つ。日をまたぐ旅行にそのまま対応できる。値はupdate_scheduleが計算して埋める。
@@ -240,8 +244,8 @@ Backend
 
 - `search_places(keyword, area, category)`
 - `add_place(trip_id, place_id)`
-- `remove_place(trip_id, place_id)`
-- `reorder_places(trip_id, ordered_place_ids)`
+- `remove_place(trip_id, trip_place_id)`
+- `reorder_places(trip_id, ordered_trip_place_ids)`
 - `update_schedule(trip_id, constraints)`
 - `calculate_route(origin, destination, mode)`
 - `calculate_split(trip_id)`
