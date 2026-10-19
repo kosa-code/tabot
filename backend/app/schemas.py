@@ -1,10 +1,12 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class TripCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     name: str
     start_at: datetime
     end_at: datetime
@@ -23,7 +25,41 @@ class TripRead(BaseModel):
 
 
 class TripUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     name: str | None = None
     start_at: datetime | None = None
     end_at: datetime | None = None
     budget: int | None = None
+
+
+class PlaceCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    latitude: float = Field(ge=-90, le=90)
+    longitude: float = Field(ge=-180, le=180)
+    category: str | None = None
+    opening_hours: dict | None = None
+
+
+class PlaceUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None = None
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+    category: str | None = None
+    opening_hours: dict | None = None
+
+
+class PlaceRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    name: str
+    latitude: float
+    longitude: float
+    category: str | None
+    opening_hours: dict | None
+    fetched_at: datetime
