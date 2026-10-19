@@ -63,3 +63,22 @@ class PlaceRead(BaseModel):
     category: str | None
     opening_hours: dict | None
     fetched_at: datetime
+
+
+class TripPlaceCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    place_id: UUID
+    stay_minutes: int = Field(default=0, ge=0)
+
+
+class TripPlaceRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    trip_id: UUID
+    place_id: UUID
+    visit_order: int
+    stay_minutes: int
+    start_time: datetime | None
+    end_time: datetime | None
