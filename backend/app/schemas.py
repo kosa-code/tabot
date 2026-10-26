@@ -82,3 +82,15 @@ class TripPlaceRead(BaseModel):
     stay_minutes: int
     start_time: datetime | None
     end_time: datetime | None
+
+
+class TripPlaceUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    stay_minutes: int = Field(ge=0)
+
+
+class TripPlaceOrder(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    trip_place_ids: list[UUID]
