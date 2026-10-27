@@ -86,6 +86,7 @@ class TripPlaceRead(BaseModel):
     place_id: UUID
     visit_order: int
     stay_minutes: int
+    travel_minutes: int | None
     start_time: datetime | None
     end_time: datetime | None
 
