@@ -78,6 +78,7 @@ class TripPlace(Base):
     stay_minutes: Mapped[int] = mapped_column(
         Integer, nullable=False, server_default="0"
     )
+    travel_minutes: Mapped[int | None] = mapped_column(Integer, nullable=True)
     start_time: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
