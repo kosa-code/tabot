@@ -1,16 +1,22 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
 
 
 class TripCreate(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: str
-    start_at: datetime
-    end_at: datetime
+    start_at: AwareDatetime
+    end_at: AwareDatetime
     budget: int | None = None
+
+    @model_validator(mode="after")
+    def check_period(self):
+        if self.end_at <= self.start_at:
+            raise ValueError("end_at must be after start_at")
+        return self
 
 
 class TripRead(BaseModel):
@@ -28,8 +34,8 @@ class TripUpdate(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: str | None = None
-    start_at: datetime | None = None
-    end_at: datetime | None = None
+    start_at: AwareDatetime | None = None
+    end_at: AwareDatetime | None = None
     budget: int | None = None
 
 

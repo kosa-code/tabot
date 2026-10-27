@@ -12,6 +12,7 @@ from app.schemas import (
     TripPlaceRead,
     TripPlaceUpdate,
 )
+from app.services.schedule import update_schedule
 
 router = APIRouter(prefix="/trips/{trip_id}/places", tags=["trip_places"])
 
@@ -42,6 +43,7 @@ def add_trip_place(
         stay_minutes=payload.stay_minutes,
     )
     db.add(trip_place)
+    update_schedule(db, trip_id)
     db.commit()
     db.refresh(trip_place)
     return trip_place
@@ -78,6 +80,7 @@ def reorder_trip_places(
 
     for order, trip_place_id in enumerate(ids, start=1):
         by_id[trip_place_id].visit_order = order
+    update_schedule(db, trip_id)
     db.commit()
     return sorted(trip_places, key=lambda tp: tp.visit_order)
 
@@ -91,6 +94,7 @@ def update_trip_place(
 ):
     trip_place = get_trip_place_or_404(db, trip_id, trip_place_id)
     trip_place.stay_minutes = payload.stay_minutes
+    update_schedule(db, trip_id)
     db.commit()
     db.refresh(trip_place)
     return trip_place
@@ -108,4 +112,5 @@ def remove_trip_place(
         .where(TripPlace.trip_id == trip_id, TripPlace.visit_order > removed_order)
         .values(visit_order=TripPlace.visit_order - 1)
     )
+    update_schedule(db, trip_id)
     db.commit()

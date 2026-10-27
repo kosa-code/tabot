@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.deps import get_db
 from app.models import Trip, User
 from app.schemas import TripCreate, TripRead, TripUpdate
+from app.services.schedule import update_schedule
 
 router = APIRouter(prefix="/trips", tags=["trips"])
 
@@ -47,6 +48,9 @@ def update_trip(trip_id: UUID, payload: TripUpdate, db: Session = Depends(get_db
         raise HTTPException(status_code=404, detail="Trip not found")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(trip, field, value)
+    if trip.end_at <= trip.start_at:
+        raise HTTPException(status_code=422, detail="end_at must be after start_at")
+    update_schedule(db, trip_id)
     db.commit()
     db.refresh(trip)
     return trip
