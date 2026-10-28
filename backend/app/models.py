@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
 
@@ -85,3 +85,8 @@ class TripPlace(Base):
     end_time: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
+    place: Mapped[Place] = relationship()
+
+    @property
+    def place_name(self) -> str:
+        return self.place.name

@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select, update
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.deps import get_db
 from app.models import Place, Trip, TripPlace
@@ -58,6 +58,7 @@ def list_trip_places(trip_id: UUID, db: Session = Depends(get_db)):
     trip_places = db.scalars(
         select(TripPlace)
         .where(TripPlace.trip_id == trip_id)
+        .options(selectinload(TripPlace.place))
         .order_by(TripPlace.visit_order)
     ).all()
     return {"items": trip_places, "warnings": check_constraints(trip, trip_places)}
