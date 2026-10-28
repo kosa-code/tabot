@@ -48,3 +48,18 @@ def update_schedule(db: Session, trip_id: UUID) -> None:
         current += timedelta(minutes=trip_place.stay_minutes)
         trip_place.end_time = current
         previous_place = place
+
+
+def check_constraints(trip: Trip, trip_places: list[TripPlace]) -> list[dict]:
+    warnings = []
+    if trip_places and trip_places[-1].end_time is not None:
+        last_end = trip_places[-1].end_time
+        if last_end > trip.end_at:
+            over = math.ceil((last_end - trip.end_at).total_seconds() / 60)
+            warnings.append(
+                {
+                    "code": "exceeds_trip_end",
+                    "message": f"旅程が旅行の終了時刻を{over}分超えています",
+                }
+            )
+    return warnings

@@ -8,11 +8,12 @@ from app.deps import get_db
 from app.models import Place, Trip, TripPlace
 from app.schemas import (
     TripPlaceCreate,
+    TripPlaceList,
     TripPlaceOrder,
     TripPlaceRead,
     TripPlaceUpdate,
 )
-from app.services.schedule import update_schedule
+from app.services.schedule import check_constraints, update_schedule
 
 router = APIRouter(prefix="/trips/{trip_id}/places", tags=["trip_places"])
 
@@ -49,15 +50,17 @@ def add_trip_place(
     return trip_place
 
 
-@router.get("", response_model=list[TripPlaceRead])
+@router.get("", response_model=TripPlaceList)
 def list_trip_places(trip_id: UUID, db: Session = Depends(get_db)):
-    if db.get(Trip, trip_id) is None:
+    trip = db.get(Trip, trip_id)
+    if trip is None:
         raise HTTPException(status_code=404, detail="Trip not found")
-    return db.scalars(
+    trip_places = db.scalars(
         select(TripPlace)
         .where(TripPlace.trip_id == trip_id)
         .order_by(TripPlace.visit_order)
     ).all()
+    return {"items": trip_places, "warnings": check_constraints(trip, trip_places)}
 
 
 @router.put("/order", response_model=list[TripPlaceRead])

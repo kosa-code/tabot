@@ -91,6 +91,16 @@ class TripPlaceRead(BaseModel):
     end_time: datetime | None
 
 
+class ScheduleWarning(BaseModel):
+    code: str
+    message: str
+
+
+class TripPlaceList(BaseModel):
+    items: list[TripPlaceRead]
+    warnings: list[ScheduleWarning]
+
+
 class TripPlaceUpdate(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
