@@ -37,6 +37,7 @@ erDiagram
         uuid place_id FK
         integer visit_order
         integer stay_minutes "既定0"
+        integer travel_minutes "NULL可"
         timestamptz start_time "NULL可"
         timestamptz end_time "NULL可"
     }
@@ -62,6 +63,7 @@ Migrationツールは Alembic を使う。
 |---|---|
 | trips.budget | 予算を決めずに作り始められる |
 | trip_places.start_time / end_time | update_scheduleが計算するまで空 |
+| trip_places.travel_minutes | 1件目は前の地点が無いため空 |
 | places.opening_hours | 手入力なので不明な場合がある |
 | places.category | 同上 |
 
