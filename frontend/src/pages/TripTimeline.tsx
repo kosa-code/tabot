@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { fetchTrip, fetchTripPlaces } from '../api'
+import Alert from '../components/Alert'
+import Message from '../components/Message'
+import PageLayout from '../components/PageLayout'
+import TimelineItem from '../components/TimelineItem'
+import TravelSegment from '../components/TravelSegment'
 import type { Trip, TripPlaceList } from '../types/schemas'
+import { formatPeriod } from '../utils/format'
 
-function formatTime(iso: string | null) {
-  if (!iso) return '--:--'
-  return new Date(iso).toLocaleTimeString('ja-JP', {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
+const BACK = { to: '/', label: '旅行一覧' }
 
 function TripTimeline() {
   const { tripId } = useParams()
@@ -27,35 +27,44 @@ function TripTimeline() {
       .catch((e: Error) => setError(e.message))
   }, [tripId])
 
-  if (error) return <p>エラー: {error}</p>
-  if (!trip || !plan) return <p>読み込み中…</p>
+  if (error) {
+    return (
+      <PageLayout title="タイムライン" back={BACK}>
+        <Alert>エラー: {error}</Alert>
+      </PageLayout>
+    )
+  }
+
+  if (!trip || !plan) {
+    return (
+      <PageLayout title="タイムライン" back={BACK}>
+        <Message>読み込み中…</Message>
+      </PageLayout>
+    )
+  }
 
   return (
-    <main>
-      <Link to="/">← 旅行一覧</Link>
-      <h1>{trip.name}</h1>
-
+    <PageLayout
+      title={trip.name}
+      back={BACK}
+      description={formatPeriod(trip.start_at, trip.end_at)}
+    >
       {plan.warnings.map((w) => (
-        <p key={w.code} role="alert">
-          ⚠ {w.message}
-        </p>
+        <Alert key={w.code}>{w.message}</Alert>
       ))}
 
-      {plan.items.length === 0 && <p>まだ旅程がありません</p>}
+      {plan.items.length === 0 && <Message>まだ旅程がありません</Message>}
       <ol>
         {plan.items.map((item) => (
           <li key={item.id}>
             {item.travel_minutes !== null && (
-              <div>↓ 徒歩{item.travel_minutes}分</div>
+              <TravelSegment minutes={item.travel_minutes} />
             )}
-            <div>
-              {formatTime(item.start_time)}〜{formatTime(item.end_time)}{' '}
-              {item.place_name}（滞在{item.stay_minutes}分）
-            </div>
+            <TimelineItem item={item} />
           </li>
         ))}
       </ol>
-    </main>
+    </PageLayout>
   )
 }
 
