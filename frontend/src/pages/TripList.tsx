@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchTrips } from '../api'
 import Alert from '../components/Alert'
+import Button from '../components/Button'
 import PageLayout from '../components/PageLayout'
 import TripListItem from '../components/TripListItem'
 import type { Trip } from '../types/schemas'
@@ -16,7 +17,10 @@ function TripList() {
   }, [])
 
   return (
-    <PageLayout title="旅行一覧">
+    <PageLayout
+      title="旅行一覧"
+      action={<Button to="/trips/new">＋ 旅行を作成</Button>}
+    >
       {error && <Alert>エラー: {error}</Alert>}
       <ul className="space-y-3">
         {trips.map((trip) => (

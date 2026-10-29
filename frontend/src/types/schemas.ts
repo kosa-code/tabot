@@ -34,3 +34,11 @@ export type TripPlaceList = {
   items: TripPlace[]
   warnings: ScheduleWarning[]
 }
+
+// TripCreate
+export type TripCreate = {
+  name: string
+  start_at: string
+  end_at: string
+  budget: number | null
+}

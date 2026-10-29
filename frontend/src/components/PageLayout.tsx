@@ -5,10 +5,11 @@ type Props = {
   title: string
   back?: { to: string; label: string }
   description?: string
+  action?: ReactNode
   children: ReactNode
 }
 
-function PageLayout({ title, back, description, children }: Props) {
+function PageLayout({ title, back, description, action, children }: Props) {
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-gray-800">
       {back && (
@@ -16,7 +17,10 @@ function PageLayout({ title, back, description, children }: Props) {
           ← {back.label}
         </Link>
       )}
-      <h1 className="mt-2 text-2xl font-bold text-gray-900">{title}</h1>
+      <div className="mt-2 flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+        {action}
+      </div>
       {description && (
         <p className="mt-1 text-sm text-gray-500">{description}</p>
       )}
