@@ -51,11 +51,10 @@ alembic upgrade head
 ```
 cd backend
 .venv\Scripts\Activate.ps1
-uvicorn app.main:app --reload --port 8001
+uvicorn app.main:app --reload
 ```
 
-http://127.0.0.1:8001/docs でAPIを試せる。
-ポートは8001を使う（8000は別アプリと衝突するため）。
+http://127.0.0.1:8000/docs でAPIを試せる。
 
 ### テーブルを変更したとき
 

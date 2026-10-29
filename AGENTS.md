@@ -66,7 +66,7 @@ AIが担当:
 
 - 環境構築・DB変更(CREATE / DROP / INSERT、migrationの適用)は人間が実行する。エージェントはコマンドと期待される表示を示す
 - 読み取りだけの確認(SELECT、ファイルの存在確認など)はエージェントが実行してよい
-- backend のコマンドは `backend/` で venv を有効化して実行する。サーバーは `--port 8001`
+- backend のコマンドは `backend/` で venv を有効化して実行する
 
 ## 技術上の注意
 
