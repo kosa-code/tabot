@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router'
 import { fetchTrips } from '../api'
+import Alert from '../components/Alert'
+import PageLayout from '../components/PageLayout'
+import TripListItem from '../components/TripListItem'
 import type { Trip } from '../types/schemas'
 
 function TripList() {
@@ -13,20 +15,17 @@ function TripList() {
       .catch((e: Error) => setError(e.message))
   }, [])
 
-  if (error) return <p>エラー: {error}</p>
-
   return (
-    <main>
-      <h1>旅行一覧</h1>
-      <ul>
+    <PageLayout title="旅行一覧">
+      {error && <Alert>エラー: {error}</Alert>}
+      <ul className="space-y-3">
         {trips.map((trip) => (
           <li key={trip.id}>
-            <Link to={`/trips/${trip.id}`}>{trip.name}</Link>
-            （{new Date(trip.start_at).toLocaleString('ja-JP')}〜）
+            <TripListItem trip={trip} />
           </li>
         ))}
       </ul>
-    </main>
+    </PageLayout>
   )
 }
 
