@@ -9,8 +9,35 @@ export type Trip = {
   budget: number | null
 }
 
-export async function fetchTrips(): Promise<Trip[]> {
-  const res = await fetch(`${API_URL}/trips`)
-  if (!res.ok) throw new Error(`GET /trips failed: ${res.status}`)
+export type TripPlace = {
+  id: string
+  trip_id: string
+  place_id: string
+  place_name: string
+  visit_order: number
+  stay_minutes: number
+  travel_minutes: number | null
+  start_time: string | null
+  end_time: string | null
+}
+
+export type ScheduleWarning = {
+  code: string
+  message: string
+}
+
+export type TripPlaceList = {
+  items: TripPlace[]
+  warnings: ScheduleWarning[]
+}
+
+async function getJson<T>(path: string): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`)
+  if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`)
   return res.json()
 }
+
+export const fetchTrips = () => getJson<Trip[]>('/trips')
+export const fetchTrip = (tripId: string) => getJson<Trip>(`/trips/${tripId}`)
+export const fetchTripPlaces = (tripId: string) =>
+  getJson<TripPlaceList>(`/trips/${tripId}/places`)
