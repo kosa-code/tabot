@@ -9,7 +9,7 @@ AIの柔軟さと通常プログラムの正確性を組み合わせた旅行プ
 
 | 分類 | 技術 | 備考 |
 |---|---|---|
-| Frontend | React / Vite | Next.jsは採用しない。サーバー側描画・SEOが不要で、概念が増える分だけ不利なため |
+| Frontend | React / TypeScript / Vite | Next.jsは採用しない。サーバー側描画・SEOが不要で、概念が増える分だけ不利なため |
 | Backend | Python / FastAPI | |
 | Database | PostgreSQL | 開発初期から本番までPostgres。移行作業を発生させない。開発中はWindowsにインストールしたPostgresを直接使う(Dockerは使わない)。アクセスはORM(SQLAlchemy)経由 |
 | AI | OpenAI API | Phase 2から |
@@ -25,6 +25,7 @@ AIの柔軟さと通常プログラムの正確性を組み合わせた旅行プ
 
 - Python 3.12
 - PostgreSQL 18（Windowsに直接インストール）
+- Node.js 24
 
 ### 初回のみ
 
@@ -55,6 +56,24 @@ uvicorn app.main:app --reload
 ```
 
 http://127.0.0.1:8000/docs でAPIを試せる。
+
+### フロント
+
+初回のみ:
+
+```
+cd frontend
+npm install
+```
+
+毎回（バックエンドとは別のターミナルで）:
+
+```
+cd frontend
+npm run dev
+```
+
+http://localhost:5173 で画面が見られる。バックエンドも起動しておくこと。
 
 ### テーブルを変更したとき
 
