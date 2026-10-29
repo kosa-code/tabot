@@ -1,35 +1,6 @@
+import type { Trip, TripPlaceList } from './types/schemas'
+
 const API_URL = 'http://127.0.0.1:8000'
-
-export type Trip = {
-  id: string
-  user_id: string
-  name: string
-  start_at: string
-  end_at: string
-  budget: number | null
-}
-
-export type TripPlace = {
-  id: string
-  trip_id: string
-  place_id: string
-  place_name: string
-  visit_order: number
-  stay_minutes: number
-  travel_minutes: number | null
-  start_time: string | null
-  end_time: string | null
-}
-
-export type ScheduleWarning = {
-  code: string
-  message: string
-}
-
-export type TripPlaceList = {
-  items: TripPlace[]
-  warnings: ScheduleWarning[]
-}
 
 async function getJson<T>(path: string): Promise<T> {
   const res = await fetch(`${API_URL}${path}`)

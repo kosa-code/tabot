@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { fetchTrips, type Trip } from '../api'
+import { fetchTrips } from '../api'
+import type { Trip } from '../types/schemas'
 
 function TripList() {
   const [trips, setTrips] = useState<Trip[]>([])

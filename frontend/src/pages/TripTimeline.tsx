@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import {
-  fetchTrip,
-  fetchTripPlaces,
-  type Trip,
-  type TripPlaceList,
-} from '../api'
+import { fetchTrip, fetchTripPlaces } from '../api'
+import type { Trip, TripPlaceList } from '../types/schemas'
 
 function formatTime(iso: string | null) {
   if (!iso) return '--:--'
