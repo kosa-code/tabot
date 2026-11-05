@@ -5,6 +5,7 @@ import type {
   TripPlace,
   TripPlaceCreate,
   TripPlaceList,
+  TripPlaceUpdate,
 } from './types/schemas'
 
 const API_URL = 'http://127.0.0.1:8000'
@@ -47,3 +48,8 @@ export const addTripPlace = (tripId: string, payload: TripPlaceCreate) =>
   send<TripPlace>('POST', `/trips/${tripId}/places`, payload)
 export const deleteTripPlace = (tripId: string, tripPlaceId: string) =>
   remove(`/trips/${tripId}/places/${tripPlaceId}`)
+export const updateTripPlace = (
+  tripId: string,
+  tripPlaceId: string,
+  payload: TripPlaceUpdate,
+) => send<TripPlace>('PATCH', `/trips/${tripId}/places/${tripPlaceId}`, payload)

@@ -59,3 +59,8 @@ export type TripPlaceCreate = {
   place_id: string
   stay_minutes: number
 }
+
+// TripPlaceUpdate
+export type TripPlaceUpdate = {
+  stay_minutes: number
+}

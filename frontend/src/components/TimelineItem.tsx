@@ -2,13 +2,15 @@ import type { TripPlace } from '../types/schemas'
 import { formatTime } from '../utils/format'
 import Button from './Button'
 import Card from './Card'
+import StayEditor from './StayEditor'
 
 type Props = {
   item: TripPlace
   onDelete?: () => void
+  onChangeStay?: (minutes: number) => Promise<void>
 }
 
-function TimelineItem({ item, onDelete }: Props) {
+function TimelineItem({ item, onDelete, onChangeStay }: Props) {
   return (
     <Card>
       <div className="flex gap-4">
@@ -17,7 +19,7 @@ function TimelineItem({ item, onDelete }: Props) {
         </p>
         <div className="flex-1">
           <p className="font-semibold text-gray-900">{item.place_name}</p>
-          <p className="text-sm text-gray-500">滞在{item.stay_minutes}分</p>
+          <StayEditor minutes={item.stay_minutes} onSave={onChangeStay} />
         </div>
         {onDelete && (
           <div className="shrink-0">

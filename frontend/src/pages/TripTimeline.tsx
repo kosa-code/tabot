@@ -6,6 +6,7 @@ import {
   fetchPlaces,
   fetchTrip,
   fetchTripPlaces,
+  updateTripPlace,
 } from '../api'
 import AddTripPlaceForm from '../components/AddTripPlaceForm'
 import Alert from '../components/Alert'
@@ -47,6 +48,12 @@ function TripTimeline() {
   async function handleAdd(payload: TripPlaceCreate) {
     if (!tripId) return
     await addTripPlace(tripId, payload)
+    setPlan(await fetchTripPlaces(tripId))
+  }
+
+  async function handleChangeStay(item: TripPlace, minutes: number) {
+    if (!tripId) return
+    await updateTripPlace(tripId, item.id, { stay_minutes: minutes })
     setPlan(await fetchTripPlaces(tripId))
   }
 
@@ -96,7 +103,11 @@ function TripTimeline() {
             {item.travel_minutes !== null && (
               <TravelSegment minutes={item.travel_minutes} />
             )}
-            <TimelineItem item={item} onDelete={() => handleDelete(item)} />
+            <TimelineItem
+              item={item}
+              onDelete={() => handleDelete(item)}
+              onChangeStay={(minutes) => handleChangeStay(item, minutes)}
+            />
           </li>
         ))}
       </ol>
