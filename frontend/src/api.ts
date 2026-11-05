@@ -28,6 +28,14 @@ async function send<T>(method: string, path: string, body: unknown): Promise<T> 
   return res.json()
 }
 
+async function remove(path: string): Promise<void> {
+  const res = await fetch(`${API_URL}${path}`, { method: 'DELETE' })
+  if (!res.ok) {
+    const detail = await res.text()
+    throw new Error(`DELETE ${path} failed: ${res.status} ${detail}`)
+  }
+}
+
 export const fetchTrips = () => getJson<Trip[]>('/trips')
 export const fetchTrip = (tripId: string) => getJson<Trip>(`/trips/${tripId}`)
 export const fetchTripPlaces = (tripId: string) =>
@@ -37,3 +45,5 @@ export const createTrip = (payload: TripCreate) =>
 export const fetchPlaces = () => getJson<Place[]>('/places')
 export const addTripPlace = (tripId: string, payload: TripPlaceCreate) =>
   send<TripPlace>('POST', `/trips/${tripId}/places`, payload)
+export const deleteTripPlace = (tripId: string, tripPlaceId: string) =>
+  remove(`/trips/${tripId}/places/${tripPlaceId}`)

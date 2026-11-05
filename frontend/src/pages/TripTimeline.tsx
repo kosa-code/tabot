@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import { addTripPlace, fetchPlaces, fetchTrip, fetchTripPlaces } from '../api'
+import {
+  addTripPlace,
+  deleteTripPlace,
+  fetchPlaces,
+  fetchTrip,
+  fetchTripPlaces,
+} from '../api'
 import AddTripPlaceForm from '../components/AddTripPlaceForm'
 import Alert from '../components/Alert'
 import Card from '../components/Card'
@@ -11,6 +17,7 @@ import TravelSegment from '../components/TravelSegment'
 import type {
   Place,
   Trip,
+  TripPlace,
   TripPlaceCreate,
   TripPlaceList,
 } from '../types/schemas'
@@ -24,6 +31,7 @@ function TripTimeline() {
   const [plan, setPlan] = useState<TripPlaceList | null>(null)
   const [places, setPlaces] = useState<Place[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!tripId) return
@@ -40,6 +48,18 @@ function TripTimeline() {
     if (!tripId) return
     await addTripPlace(tripId, payload)
     setPlan(await fetchTripPlaces(tripId))
+  }
+
+  async function handleDelete(item: TripPlace) {
+    if (!tripId) return
+    if (!confirm(`「${item.place_name}」を旅程から削除しますか？`)) return
+    setActionError(null)
+    try {
+      await deleteTripPlace(tripId, item.id)
+      setPlan(await fetchTripPlaces(tripId))
+    } catch (e) {
+      setActionError((e as Error).message)
+    }
   }
 
   if (error) {
@@ -64,6 +84,7 @@ function TripTimeline() {
       back={BACK}
       description={formatPeriod(trip.start_at, trip.end_at)}
     >
+      {actionError && <Alert>エラー: {actionError}</Alert>}
       {plan.warnings.map((w) => (
         <Alert key={w.code}>{w.message}</Alert>
       ))}
@@ -75,7 +96,7 @@ function TripTimeline() {
             {item.travel_minutes !== null && (
               <TravelSegment minutes={item.travel_minutes} />
             )}
-            <TimelineItem item={item} />
+            <TimelineItem item={item} onDelete={() => handleDelete(item)} />
           </li>
         ))}
       </ol>
