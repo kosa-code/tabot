@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import { fetchTrip, fetchTripPlaces } from '../api'
+import { addTripPlace, fetchPlaces, fetchTrip, fetchTripPlaces } from '../api'
+import AddTripPlaceForm from '../components/AddTripPlaceForm'
 import Alert from '../components/Alert'
+import Card from '../components/Card'
 import Message from '../components/Message'
 import PageLayout from '../components/PageLayout'
 import TimelineItem from '../components/TimelineItem'
 import TravelSegment from '../components/TravelSegment'
-import type { Trip, TripPlaceList } from '../types/schemas'
+import type {
+  Place,
+  Trip,
+  TripPlaceCreate,
+  TripPlaceList,
+} from '../types/schemas'
 import { formatPeriod } from '../utils/format'
 
 const BACK = { to: '/', label: '旅行一覧' }
@@ -15,17 +22,25 @@ function TripTimeline() {
   const { tripId } = useParams()
   const [trip, setTrip] = useState<Trip | null>(null)
   const [plan, setPlan] = useState<TripPlaceList | null>(null)
+  const [places, setPlaces] = useState<Place[]>([])
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!tripId) return
-    Promise.all([fetchTrip(tripId), fetchTripPlaces(tripId)])
-      .then(([t, p]) => {
+    Promise.all([fetchTrip(tripId), fetchTripPlaces(tripId), fetchPlaces()])
+      .then(([t, p, pl]) => {
         setTrip(t)
         setPlan(p)
+        setPlaces(pl)
       })
       .catch((e: Error) => setError(e.message))
   }, [tripId])
+
+  async function handleAdd(payload: TripPlaceCreate) {
+    if (!tripId) return
+    await addTripPlace(tripId, payload)
+    setPlan(await fetchTripPlaces(tripId))
+  }
 
   if (error) {
     return (
@@ -64,6 +79,12 @@ function TripTimeline() {
           </li>
         ))}
       </ol>
+
+      <div className="mt-6">
+        <Card>
+          <AddTripPlaceForm places={places} onAdd={handleAdd} />
+        </Card>
+      </div>
     </PageLayout>
   )
 }

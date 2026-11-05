@@ -42,3 +42,20 @@ export type TripCreate = {
   end_at: string
   budget: number | null
 }
+
+// PlaceRead
+export type Place = {
+  id: string
+  name: string
+  latitude: number
+  longitude: number
+  category: string | null
+  opening_hours: Record<string, unknown> | null
+  fetched_at: string
+}
+
+// TripPlaceCreate
+export type TripPlaceCreate = {
+  place_id: string
+  stay_minutes: number
+}
