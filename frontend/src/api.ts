@@ -5,6 +5,7 @@ import type {
   TripPlace,
   TripPlaceCreate,
   TripPlaceList,
+  TripPlaceOrder,
   TripPlaceUpdate,
 } from './types/schemas'
 
@@ -53,3 +54,5 @@ export const updateTripPlace = (
   tripPlaceId: string,
   payload: TripPlaceUpdate,
 ) => send<TripPlace>('PATCH', `/trips/${tripId}/places/${tripPlaceId}`, payload)
+export const reorderTripPlaces = (tripId: string, payload: TripPlaceOrder) =>
+  send<TripPlace[]>('PUT', `/trips/${tripId}/places/order`, payload)

@@ -6,6 +6,7 @@ import {
   fetchPlaces,
   fetchTrip,
   fetchTripPlaces,
+  reorderTripPlaces,
   updateTripPlace,
 } from '../api'
 import AddTripPlaceForm from '../components/AddTripPlaceForm'
@@ -57,6 +58,20 @@ function TripTimeline() {
     setPlan(await fetchTripPlaces(tripId))
   }
 
+  async function handleMove(index: number, delta: -1 | 1) {
+    if (!tripId || !plan) return
+    const ids = plan.items.map((i) => i.id)
+    const target = index + delta
+    ;[ids[index], ids[target]] = [ids[target], ids[index]]
+    setActionError(null)
+    try {
+      await reorderTripPlaces(tripId, { trip_place_ids: ids })
+      setPlan(await fetchTripPlaces(tripId))
+    } catch (e) {
+      setActionError((e as Error).message)
+    }
+  }
+
   async function handleDelete(item: TripPlace) {
     if (!tripId) return
     if (!confirm(`「${item.place_name}」を旅程から削除しますか？`)) return
@@ -98,7 +113,7 @@ function TripTimeline() {
 
       {plan.items.length === 0 && <Message>まだ旅程がありません</Message>}
       <ol>
-        {plan.items.map((item) => (
+        {plan.items.map((item, i) => (
           <li key={item.id}>
             {item.travel_minutes !== null && (
               <TravelSegment minutes={item.travel_minutes} />
@@ -107,6 +122,10 @@ function TripTimeline() {
               item={item}
               onDelete={() => handleDelete(item)}
               onChangeStay={(minutes) => handleChangeStay(item, minutes)}
+              onMoveUp={i > 0 ? () => handleMove(i, -1) : undefined}
+              onMoveDown={
+                i < plan.items.length - 1 ? () => handleMove(i, 1) : undefined
+              }
             />
           </li>
         ))}

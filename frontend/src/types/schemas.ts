@@ -64,3 +64,8 @@ export type TripPlaceCreate = {
 export type TripPlaceUpdate = {
   stay_minutes: number
 }
+
+// TripPlaceOrder
+export type TripPlaceOrder = {
+  trip_place_ids: string[]
+}

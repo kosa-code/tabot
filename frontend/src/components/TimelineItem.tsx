@@ -8,9 +8,18 @@ type Props = {
   item: TripPlace
   onDelete?: () => void
   onChangeStay?: (minutes: number) => Promise<void>
+  onMoveUp?: () => void
+  onMoveDown?: () => void
 }
 
-function TimelineItem({ item, onDelete, onChangeStay }: Props) {
+function TimelineItem({
+  item,
+  onDelete,
+  onChangeStay,
+  onMoveUp,
+  onMoveDown,
+}: Props) {
+  const canMove = onMoveUp !== undefined || onMoveDown !== undefined
   return (
     <Card>
       <div className="flex gap-4">
@@ -21,13 +30,27 @@ function TimelineItem({ item, onDelete, onChangeStay }: Props) {
           <p className="font-semibold text-gray-900">{item.place_name}</p>
           <StayEditor minutes={item.stay_minutes} onSave={onChangeStay} />
         </div>
-        {onDelete && (
-          <div className="shrink-0">
+        <div className="flex shrink-0 gap-2">
+          {canMove && (
+            <>
+              <Button variant="secondary" disabled={!onMoveUp} onClick={onMoveUp}>
+                ↑
+              </Button>
+              <Button
+                variant="secondary"
+                disabled={!onMoveDown}
+                onClick={onMoveDown}
+              >
+                ↓
+              </Button>
+            </>
+          )}
+          {onDelete && (
             <Button variant="secondary" onClick={onDelete}>
               削除
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </Card>
   )
