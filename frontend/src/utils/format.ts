@@ -26,3 +26,10 @@ export function formatPeriod(startIso: string, endIso: string) {
   const end = sameDay ? formatTime(endIso) : formatDateTime(endIso)
   return `${formatDateTime(startIso)} 〜 ${end}`
 }
+
+// <input type="datetime-local"> 用の形（ブラウザの時刻、例: 2026-11-05T10:00）
+export function toDateTimeLocal(iso: string) {
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}

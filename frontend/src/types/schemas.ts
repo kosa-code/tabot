@@ -69,3 +69,11 @@ export type TripPlaceUpdate = {
 export type TripPlaceOrder = {
   trip_place_ids: string[]
 }
+
+// TripUpdate
+export type TripUpdate = {
+  name?: string
+  start_at?: string
+  end_at?: string
+  budget?: number | null
+}

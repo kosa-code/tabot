@@ -1,19 +1,27 @@
 import { useState, type FormEvent } from 'react'
 import type { TripCreate } from '../types/schemas'
+import { toDateTimeLocal } from '../utils/format'
 import Alert from './Alert'
 import Button from './Button'
 import Input from './Input'
 
 type Props = {
   submitLabel: string
+  initial?: TripCreate
   onSubmit: (payload: TripCreate) => Promise<void>
 }
 
-function TripForm({ submitLabel, onSubmit }: Props) {
-  const [name, setName] = useState('')
-  const [startAt, setStartAt] = useState('')
-  const [endAt, setEndAt] = useState('')
-  const [budget, setBudget] = useState('')
+function TripForm({ submitLabel, initial, onSubmit }: Props) {
+  const [name, setName] = useState(initial?.name ?? '')
+  const [startAt, setStartAt] = useState(
+    initial ? toDateTimeLocal(initial.start_at) : '',
+  )
+  const [endAt, setEndAt] = useState(
+    initial ? toDateTimeLocal(initial.end_at) : '',
+  )
+  const [budget, setBudget] = useState(
+    initial?.budget == null ? '' : String(initial.budget),
+  )
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 

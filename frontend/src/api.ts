@@ -7,6 +7,7 @@ import type {
   TripPlaceList,
   TripPlaceOrder,
   TripPlaceUpdate,
+  TripUpdate,
 } from './types/schemas'
 
 const API_URL = 'http://127.0.0.1:8000'
@@ -44,6 +45,8 @@ export const fetchTripPlaces = (tripId: string) =>
   getJson<TripPlaceList>(`/trips/${tripId}/places`)
 export const createTrip = (payload: TripCreate) =>
   send<Trip>('POST', '/trips', payload)
+export const updateTrip = (tripId: string, payload: TripUpdate) =>
+  send<Trip>('PATCH', `/trips/${tripId}`, payload)
 export const fetchPlaces = () => getJson<Place[]>('/places')
 export const addTripPlace = (tripId: string, payload: TripPlaceCreate) =>
   send<TripPlace>('POST', `/trips/${tripId}/places`, payload)

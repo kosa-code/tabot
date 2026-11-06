@@ -11,6 +11,7 @@ import {
 } from '../api'
 import AddTripPlaceForm from '../components/AddTripPlaceForm'
 import Alert from '../components/Alert'
+import Button from '../components/Button'
 import Card from '../components/Card'
 import Message from '../components/Message'
 import PageLayout from '../components/PageLayout'
@@ -105,6 +106,11 @@ function TripTimeline() {
       title={trip.name}
       back={BACK}
       description={formatPeriod(trip.start_at, trip.end_at)}
+      action={
+        <Button variant="secondary" to={`/trips/${trip.id}/edit`}>
+          編集
+        </Button>
+      }
     >
       {actionError && <Alert>エラー: {actionError}</Alert>}
       {plan.warnings.map((w) => (
