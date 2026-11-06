@@ -47,6 +47,7 @@ export const createTrip = (payload: TripCreate) =>
   send<Trip>('POST', '/trips', payload)
 export const updateTrip = (tripId: string, payload: TripUpdate) =>
   send<Trip>('PATCH', `/trips/${tripId}`, payload)
+export const deleteTrip = (tripId: string) => remove(`/trips/${tripId}`)
 export const fetchPlaces = () => getJson<Place[]>('/places')
 export const addTripPlace = (tripId: string, payload: TripPlaceCreate) =>
   send<TripPlace>('POST', `/trips/${tripId}/places`, payload)
