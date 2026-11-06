@@ -12,7 +12,7 @@ AIの柔軟さと通常プログラムの正確性を組み合わせた旅行プ
 | Frontend | React / TypeScript / Vite | Next.jsは採用しない。サーバー側描画・SEOが不要で、概念が増える分だけ不利なため |
 | Backend | Python / FastAPI | |
 | Database | PostgreSQL | 開発初期から本番までPostgres。移行作業を発生させない。開発中はWindowsにインストールしたPostgresを直接使う(Dockerは使わない)。アクセスはORM(SQLAlchemy)経由 |
-| AI | OpenAI API | Phase 2から |
+| AI | Gemini API(無料枠) | Phase 2から |
 | 移動時間計算 | 直線距離×係数(仮実装) | OSMnx / Routing APIは必要になってから |
 | Version Control | Git / GitHub | |
 | 開発 | CLI Coding Agent | |

@@ -93,15 +93,31 @@ Backend
 更新された旅行プラン表示
 ```
 
+#### 最初の範囲(2026-11-06 決定)
+
+- AIが扱うのは**登録済みの場所だけ**。外部の場所検索(`search_places`)は次の段階
+- 使うTool: `add_place` / `remove_place` / `reorder_places` / `update_stay`。中身は既存のAPIの処理を使い回す
+- **提案 → 適用**: AIの指示(Toolと引数の一覧)をサーバーで検証し、変更後の予定を見せる。「適用」を押したときだけDBに保存する
+- 変更後の予定は、トランザクション内で実際に処理して時刻を計算し、ロールバックして作る(時刻はAIではなくプログラムが出す)
+- **1回ずつの指示**: 会話の履歴は持たない。チャット形式は後で検討
+- 画面: タイムライン画面の上部(警告の下)に「AIに頼む」欄を置く
+
+#### 場所検索の候補(未決定)
+
+- 第一候補: OpenStreetMap(Nominatim / Overpass)。無料、1秒1回まで、営業時間は一部のみ
+- 精度・営業時間が足りなければ Google Places API に替える
+- 緯度経度はAIに答えさせず、APIの値を使う。検索部分は差し替えられる作りにする
+
 #### Tool一覧
 
 - `search_places(keyword, area, category)`
-- `add_place(trip_id, place_id)`
+- `add_place(trip_id, place_id, stay_minutes)`
 - `remove_place(trip_id, trip_place_id)`
 - `reorder_places(trip_id, ordered_trip_place_ids)`
-- `update_schedule(trip_id, constraints)`
-- `calculate_route(origin, destination, mode)`
+- `update_stay(trip_id, trip_place_id, stay_minutes)`
 - `calculate_split(trip_id)`
+
+`update_schedule` と移動時間の計算はAIに呼ばせない。旅程が変わるたびにプログラムが自動で再計算する([scheduling.md](scheduling.md))。
 
 #### Tool利用ルール
 
@@ -199,10 +215,10 @@ AIによるプラン変更は、変更前後の差分と変更理由を表示す
 ```
 React (Vite) → API Gateway → Lambda
                           ├ PostgreSQL
-                          ├ OpenAI API
+                          ├ Gemini API
                           └ CloudWatch
 ```
 
-- OpenAI APIキー等はSecret管理機能を利用し、コードやGitHubに保存しない
+- Gemini APIキー等はSecret管理機能を利用し、コードやGitHubに保存しない
 - 初期はサービスを増やしすぎずシンプルな構成を優先
 - 注意: OSMnxはメモリ消費が大きくLambdaと相性が悪い。導入する場合は構成を再検討する
