@@ -6,6 +6,15 @@ AIコーディングエージェント向けの作業ルール。
 
 旅行プランナー。設計は [docs/design.md](docs/design.md)、DBは [docs/database.md](docs/database.md)、時刻計算は [docs/scheduling.md](docs/scheduling.md)、起動手順は [README.md](README.md)。
 
+## 作業ログ
+
+作業の進み具合と次にやることは [docs/progress.md](docs/progress.md) に記録する。
+
+- セッションの最初に読み、「今いるところ」「次にやること」から再開する
+- 次のときに更新する: 申請が承認されて変更を反映したとき / 方針が決まったとき / 作業を中断するとき
+- 更新内容も申請に含める(差分を ```diff で示す)
+- 「これまでにやったこと」は日付ごとに追記し、古い記録は消さない
+
 ## 開発方針
 
 ### AIと通常プログラムの責務分離
